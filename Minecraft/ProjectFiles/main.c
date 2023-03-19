@@ -1,7 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "Shaders/Headers/Shader.h"
-
 #include <cglm/cglm.h>
 #include <math.h>
 
@@ -14,6 +12,7 @@
 #include "Textures/Headers/DrawNoise.h"
 #include "Textures/Headers/ColorMap.h"
 #include "Textures/Headers/BitmapCreator.h"
+#include "Shaders/Headers/Shader.h"
 //Utils
 #include "Utils/Headers/TimeUtils.h"
 #include "Utils/Headers/FileUtils.h"
