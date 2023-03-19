@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ProjectFiles\main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Generators\Chunk\Headers\ChunkGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Generators\Chunk\Headers\ChunkManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Generators\Chunk\Headers\Region.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Generators\Noises\Headers\SimplexNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Physics\Headers\Collisions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Physics\Headers\Ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Player\Headers\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Player\Headers\Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Player\Headers\Destroy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Shaders\Headers\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Textures\Headers\BitmapCreator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Textures\Headers\Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Textures\Headers\ColorMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Textures\Headers\DrawNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Textures\Headers\TextureSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Utils\Headers\FileUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Utils\Headers\List.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Utils\Headers\RayUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Utils\Headers\TimeUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ProjectFiles\Generators\Chunk\ChunkGenerator.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Generators\Chunk\ChunkManager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Generators\Chunk\Region.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Generators\Noises\SimplexNoise.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Physics\Collisions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Physics\Ray.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Player\Camera.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Player\Controller.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Player\Destroy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Shaders\Shader.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Textures\BitmapCreator.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Textures\ColorMap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Textures\DrawNoise.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Textures\TextureSet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Utils\FileUtils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Utils\List.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Utils\RayUtils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Utils\TimeUtils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ProjectFiles\print.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ProjectFiles\Shaders\BasicColor.frag" />
+    <None Include="ProjectFiles\Shaders\BasicVertices.vert" />
+    <None Include="ProjectFiles\Makefile" />
+  </ItemGroup>
+</Project>
