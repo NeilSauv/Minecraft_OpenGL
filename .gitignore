@@ -1,5 +1,6 @@
 # Folders
-/Minecraft/x64
+Minecraft/x64/
+x64/
 
 # Prerequisites
 *.d
