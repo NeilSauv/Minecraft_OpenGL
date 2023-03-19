@@ -5,6 +5,7 @@
 
 #include "Headers/DrawNoise.h"
 #include "../Utils/Headers/FileUtils.h"
+#include "../Generators/Noises/Headers/NoiseStruct.h"
 
 #define _height ChunkSize*ChunkView*2
 #define _width  ChunkSize*ChunkView*2
@@ -18,8 +19,8 @@
 #define pixel 0xFF
 #pragma pack(push,1)
 
-void ColorBMP();
-void MonoBMP();
+void ColorBMP(NoiseObj* noise);
+void MonoBMP(NoiseObj* noise);
 
 typedef struct {
     char signature[2];
@@ -47,13 +48,13 @@ typedef struct {
 } bitmap;
 #pragma pack(pop)
 
-void CreateBMP() 
+void CreateBMP(NoiseObj* noise) 
 {
-    MonoBMP();
-    ColorBMP();
+    MonoBMP(noise);
+    ColorBMP(noise);
 }
 
-void ColorBMP()
+void ColorBMP(NoiseObj* noise)
 {
     FILE* fp = fopen("MapColor.bmp", "wb");
 
@@ -77,9 +78,9 @@ void ColorBMP()
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;
-            pixels[p + 0] = noiseMap[x][y]->blue;//blue
-            pixels[p + 1] = noiseMap[x][y]->green;//green
-            pixels[p + 2] = noiseMap[x][y]->red;//red   
+            pixels[p + 0] = noise->noiseMap[x][y]->blue;//blue
+            pixels[p + 1] = noise->noiseMap[x][y]->green;//green
+            pixels[p + 2] = noise->noiseMap[x][y]->red;//red   
         }
     }
 
@@ -90,7 +91,7 @@ void ColorBMP()
     free(pixels);
 }
 
-void MonoBMP()
+void MonoBMP(NoiseObj* noise)
 {
     FILE* fp = fopen("MapBW.bmp", "wb");
 
@@ -114,7 +115,7 @@ void MonoBMP()
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;
-            int val = (noiseMap[x][y]->height + 1) / 2 * 255;
+            int val = (noise->noiseMap[x][y]->height + 1) / 2 * 255;
             pixels[p + 0] = val;//blue
             pixels[p + 1] = val;//green
             pixels[p + 2] = val;//red   

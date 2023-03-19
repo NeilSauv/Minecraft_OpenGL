@@ -3,10 +3,14 @@
 #include <cglm/cglm.h>
 #include <math.h>
 
+#define NK_IMPLEMENTATION
+#include "Externals/nuklear/nuklear.h"
+
 //Generators
 #include "Generators/Noises/Headers/SimplexNoise.h"
 #include "Generators/Chunk/Headers/ChunkManager.h"
 #include "Generators/Chunk/Headers/Region.h"
+#include "Generators/Noises/Headers/NoiseStruct.h"
 //Textures
 #include "Textures/Headers/TextureSet.h"
 #include "Textures/Headers/DrawNoise.h"
@@ -22,6 +26,7 @@
 #include "Player/Headers/Destroy.h"
 //Physics
 #include "Physics/Headers/Ray.h"
+
 
 GLFWwindow* window;
 
@@ -39,7 +44,7 @@ int main()
     
     InitTerrainRegions();
     
-    InitNoise();
+    InitNoise(&terrain);
     
     //Window
     CreateWindow();
@@ -66,6 +71,8 @@ int main()
     glm_perspective(glm_rad(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f, projection);
 
     glfwSetCursorPos(window, 1000 / 2, 1000 / 2);
+
+    DrawNoise(&terrain);
     
     // render loop
     // -----------

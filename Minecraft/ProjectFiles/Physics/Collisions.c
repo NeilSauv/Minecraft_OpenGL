@@ -2,6 +2,7 @@
 #include "../Generators/Chunk/Headers/ChunkGenerator.h"
 #include "../Textures/Headers/DrawNoise.h"
 #include "../Utils/Headers/FileUtils.h"
+#include "../Generators/Noises/Headers/NoiseStruct.h"
 
 bool MovesCollisions(vec3 targetCameraPos)
 {
@@ -12,7 +13,7 @@ bool MovesCollisions(vec3 targetCameraPos)
 
     struct RGB* color = (struct RGB*)malloc(sizeof(struct RGB));
 
-    int height = GetSingleNoiseVal(x, z, color) * ChunkHeight/2;
+    int height = GetSingleNoiseVal(x, z, color, &terrain) * ChunkHeight/2;
 
 
     return target[1] - 2.0f > height;//&& target[1] - 1.0f >= WaterLevel;

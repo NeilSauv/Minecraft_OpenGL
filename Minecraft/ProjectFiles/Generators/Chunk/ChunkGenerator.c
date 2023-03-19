@@ -12,6 +12,7 @@
 #include "../../Textures/Headers/DrawNoise.h"
 #include "../../Textures/Headers/ColorMap.h"
 #include "../../Textures/Headers/Block.h"
+#include "../../Generators/Noises/Headers/NoiseStruct.h"
 
 #define ChunkSize 16
 #define ChunkHeight 256
@@ -168,7 +169,7 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
     
     struct RGB* colours[ChunkSize * ChunkSize];
 
-    GetNoiseVal(xAxis, zAxis, colours);
+    GetNoiseVal(xAxis, zAxis, colours, &terrain);
 
     
     int renderCount = 0;

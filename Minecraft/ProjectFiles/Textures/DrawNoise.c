@@ -7,77 +7,62 @@
 #include "../Generators/Chunk/Headers/ChunkManager.h"
 #include "Headers/ColorMap.h"
 #include "Headers/BitmapCreator.h"
+#include "../Generators/Noises/Headers/NoiseStruct.h"
 
 #define MaxNoiseValue 0.864365
 #define MinNoiseValue -0.864366
 
-void SetValueBW(int x, int y, int val);
-void SetValueColor(int x, int y, struct RGB* color);
-int GetValueBW(int x, int y); 
 float InvLerp(float a, float b, float v);
-void CreateImage();
-void GetNoiseVal(int x, int y,struct RGB* dest[]);
-void InitNoise();
+void GetNoiseVal(int x, int y,struct RGB* dest[], NoiseObj* noise);
+void InitNoise(NoiseObj* noise);
 
 //struct osn_context* ctx;
 
 unsigned char* pixels;
-struct RGB* noiseMap[ChunkSize*ChunkView*2][ChunkSize * ChunkView * 2];
 
-float scale = 200;
-int octaves = 5;
-float persistance = 0.5;
-float lacunarity = 2;
-float amplitudeVal = 1.7;
-float frequencyVal = 1;
-
-float maxNoiseHeight = FLT_MIN;
-float minNoiseHeight = FLT_MAX;
-
-void InitNoise()
+void InitNoise(NoiseObj* noise)
 {
-    open_simplex_noise(200, &ctx);
+    open_simplex_noise(200, &noise->ctx);
     
     float max = 0;
     float min = 0;
 
-    float amplitude = amplitudeVal;
-    float frequency = frequencyVal;
+    float amplitude = noise->amplitudeVal;
+    float frequency = noise->frequencyVal;
 
-    for (int i = 0; i < octaves; i++)
+    for (int i = 0; i < noise->octaves; i++)
     {
         max += (MaxNoiseValue * 2 - 1) * amplitude;
         min += (MinNoiseValue * 2 - 1) * amplitude;
 
-        amplitude *= persistance;
-        frequency *= lacunarity;
+        amplitude *= noise->persistance;
+        frequency *= noise->lacunarity;
     }
 
-    maxNoiseHeight = max;
-    minNoiseHeight = min;
-
+    noise->maxNoiseHeight = max;
+    noise->minNoiseHeight = min;
 }
 
-float GetSingleNoiseVal(int x, int y, struct RGB* dest)
+float GetSingleNoiseVal(int x, int y, struct RGB* dest, NoiseObj* noise)
 {
 
-    float amplitude = amplitudeVal;
-    float frequency = frequencyVal;
+    float amplitude = noise->amplitudeVal;
+    float frequency = noise->frequencyVal;
     float noiseHeight = 0;
 
-    for (int i = 0; i < octaves; i++)
+    for (int i = 0; i < noise->octaves; i++)
     {
-        float sampleX = (x + 20) / scale * frequency;
-        float sampleY = (y - 40) / scale * frequency;
+        float sampleX = (x + 20) / noise->scale * frequency;
+        float sampleY = (y - 40) / noise->scale * frequency;
 
         float noiseValue = open_simplex_noise2(ctx, sampleX, sampleY) * 2 - 1;
 
         noiseHeight += noiseValue * amplitude;
-        amplitude *= persistance;
-        frequency *= lacunarity;
+        amplitude *= noise->persistance;
+        frequency *= noise->lacunarity;
     }
 
-    float height = InvLerp(minNoiseHeight, maxNoiseHeight, noiseHeight);
+    float height = InvLerp(noise->minNoiseHeight, noise->maxNoiseHeight, noiseHeight);
 
     for (int i = 0; i < BiomeCount; i++)
     {
@@ -99,7 +84,7 @@ float GetSingleNoiseVal(int x, int y, struct RGB* dest)
     return height;
 }
 
-void GetNoiseVal(int x, int y,struct RGB* dest[])
+void GetNoiseVal(int x, int y,struct RGB* dest[], NoiseObj* noise)
 {
 
     float map[ChunkSize * ChunkSize];
@@ -110,20 +95,20 @@ void GetNoiseVal(int x, int y,struct RGB* dest[])
             float halfHeight = 0;
             float halfWidth = 0;
 
-            float amplitude = amplitudeVal;
-            float frequency = frequencyVal;
+            float amplitude = noise->amplitudeVal;
+            float frequency = noise->frequencyVal;
             float noiseHeight = 0;
 
-            for (int i = 0; i < octaves; i++)
+            for (int i = 0; i < noise->octaves; i++)
             {
-                float sampleX = (col-halfWidth + 20) / scale * frequency;
-                float sampleY = (raw-halfHeight -40) / scale * frequency;
+                float sampleX = (col-halfWidth + 20) / noise->scale * frequency;
+                float sampleY = (raw-halfHeight -40) / noise->scale * frequency;
 
                 float noiseValue = open_simplex_noise2(ctx, sampleX, sampleY) * 2 - 1;
 
                 noiseHeight += noiseValue * amplitude;
-                amplitude *= persistance;
-                frequency *= lacunarity;
+                amplitude *= noise->persistance;
+                frequency *= noise->lacunarity;
             }
 
             map[(raw - y) * ChunkSize + (col - x)] = noiseHeight;
@@ -132,7 +117,7 @@ void GetNoiseVal(int x, int y,struct RGB* dest[])
 
     for (int raw = y; raw < ChunkSize + y; raw++) {
         for (int col = x; col < ChunkSize + x; col++) {
-            float height = InvLerp(minNoiseHeight, maxNoiseHeight, map[(raw - y) * ChunkSize + (col - x)]);
+            float height = InvLerp(noise->minNoiseHeight, noise->maxNoiseHeight, map[(raw - y) * ChunkSize + (col - x)]);
 
             for (int i = 0; i < BiomeCount; i++)
             {
@@ -157,24 +142,24 @@ void GetNoiseVal(int x, int y,struct RGB* dest[])
 int chunksSize = ChunkSize * ChunkView * 2;
 
 
-void DrawNoise()
+void DrawNoise(NoiseObj* noise)
 {
     struct RGB* colours[ChunkSize * ChunkSize];
     
     for (int y = 0; y < chunksSize; y+=16) {
         for (int x = 0; x < chunksSize; x+= 16) {
             
-            GetNoiseVal(x-ChunkSize*ChunkView, y-ChunkSize*ChunkView, colours);
+            GetNoiseVal(x-ChunkSize*ChunkView, y-ChunkSize*ChunkView, colours, noise);
 
             for (int raw = 0; raw < ChunkSize; raw++) {
                 for (int col = 0; col < ChunkSize; col ++) {
-                    noiseMap[col+x][raw + y] = colours[raw * ChunkSize + col];
+                    noise->noiseMap[col+x][raw + y] = colours[raw * ChunkSize + col];
                 }
             }
             
         }
     }
-    CreateBMP();
+    CreateBMP(noise);
 }
 
 float InvLerp(float a, float b, float v)

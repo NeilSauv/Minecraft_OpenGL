@@ -4,19 +4,13 @@
 #include "../../Generators/Chunk/Headers/ChunkGenerator.h"
 #include "ColorMap.h"
 
-void SetValBW(int x, int y, int val, int size);
+void DrawNoise(struct NoiseObj* noise);
 
-void CreateImage();
+void InitNoise(struct NoiseObj* noise);
 
-void CreateColorImage();
+void GetNoiseVal(int x, int y, struct RGB* dest[],struct NoiseObj* noise);
 
-void DrawNoise();
-
-void InitNoise();
-
-void GetNoiseVal(int x, int y, struct RGB* dest[]);
-
-float GetSingleNoiseVal(int x, int y, struct RGB* dest);
+float GetSingleNoiseVal(int x, int y, struct RGB* dest,struct NoiseObj* noise);
 
 extern struct RGB* noiseMap[ChunkSize * ChunkView * 2][ChunkSize * ChunkView * 2];
 

@@ -22,6 +22,8 @@ SRC += Textures/BitmapCreator.c Textures/TextureSet.c Textures/ColorMap.c Textur
 
 SRC += Utils/FileUtils.c Utils/List.c Utils/RayUtils.c Utils/TimeUtils.c
 
+SRC += Externals/nanovg/android.c Externals/nanovg/blendish.c Externals/nanovg/nanosvg.c Externals/nanovg/nanosvgrast.c Externals/nanovg/nanovg.c Externals/nanovg/nanovg_gl.c Externals/nanovg/nanovg_gl_utils.c
+
 
 OBJ = ${SRC:.c=.o}
 headers =

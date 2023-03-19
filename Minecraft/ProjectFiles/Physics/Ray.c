@@ -7,6 +7,7 @@
 #include "../main.h"
 #include "../Generators/Chunk/Headers/Region.h"
 #include "../Textures/Headers/DrawNoise.h"
+#include "../Generators/Noises/Headers/NoiseStruct.h"
 
 int RoundPos(float pos);
 float RoundPosf(float pos);
@@ -34,7 +35,7 @@ bool RayCast(vec3 pos, vec3 forward, float distance, float increaseValue, int de
 	{
 		struct RGB* color = (struct RGB*)malloc(sizeof(struct RGB));
 
-		float height = GetSingleNoiseVal(position[0], position[2], color) * ChunkHeight/2;
+		float height = GetSingleNoiseVal(position[0], position[2], color, &terrain) * ChunkHeight/2;
 
 		int actualBlock[] = {RoundPos(position[0]), RoundPos(position[1]), RoundPos(position[2])};
 		dest[0] = RoundPos(position[0]);
