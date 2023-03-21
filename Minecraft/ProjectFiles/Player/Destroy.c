@@ -2,30 +2,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../Physics/Headers/Ray.h"
-#include "../Player/Headers/Camera.h"
-#include "../Player/Headers/Controller.h"
-#include "../Utils/Headers/FileUtils.h"
-#include "../Generators/Chunk/Headers/ChunkManager.h"
-#include "../Generators/Chunk/Headers/ChunkGenerator.h"
-#include "../Generators/Chunk/Headers/Region.h"
-
-struct destroyList 
-{
-	int data;
-	struct destroyList* next;
-};
+#include "../Physics/Headers/PhysicsHeaders.h"
+#include "../Player/Headers/PlayerHeaders.h"
+#include "../Utils/Headers/UtilsHeaders.h"
+#include "../Generators/Chunk/Headers/ChunkHeaders.h"
 
 int size = 0;
 
-void Add(struct destroyList* list, int element);
-
-struct destroyList* list;
-
-void Add(struct destroyList* list, int element)
+void Add(struct DestroyList* list, int element)
 {
-	struct destroyList* temp, * ptr;
-	temp = (struct destroyList*)malloc(sizeof(struct destroyList));
+	struct DestroyList* temp, * ptr;
+	temp = malloc(sizeof(struct DestroyList));
 
 	temp->data = element;
 	temp->next = NULL;  
@@ -43,7 +30,7 @@ void Add(struct destroyList* list, int element)
 	} 
 }
 
-int GetList(struct destroyList* list, int n)
+int GetList(struct DestroyList* list, int n)
 {
 	while (n > 0 && list->next != NULL)
 	{

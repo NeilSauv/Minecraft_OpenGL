@@ -1,13 +1,13 @@
-#include <cglm/cglm.h>
+ #include <cglm/cglm.h>
 #include <math.h>
 
-#include "../Generators/Chunk/Headers/ChunkManager.h"
-#include "../Generators/Noises/Headers/SimplexNoise.h"
-#include "../Utils/Headers/FileUtils.h"
 #include "../main.h"
-#include "../Generators/Chunk/Headers/Region.h"
-#include "../Textures/Headers/DrawNoise.h"
-#include "../Generators/Noises/Headers/NoiseStruct.h"
+
+#include "../Generators/Chunk/Headers/ChunkHeaders.h"
+#include "../Generators/Noises/Headers/NoisesHeaders.h"
+#include "../Utils/Headers/UtilsHeaders.h"
+#include "../Textures/Headers/TextureHeaders.h"
+#include "../Physics/Headers/PhysicsHeaders.h"
 
 int RoundPos(float pos);
 float RoundPosf(float pos);
@@ -18,7 +18,7 @@ void mat4_vec4_mul(mat4 m1, vec4 m2, vec4 dest);
 vec3 currentRay = GLM_VEC3_ZERO_INIT;
 
 
-bool RayCast(vec3 pos, vec3 forward, float distance, float increaseValue, int dest[])
+bool RayCast(vec3 pos, vec3 forward, float distance, float increaseValue, vec3 dest)
 {
 	vec3 position = {pos[0], pos[1], pos[2]};
 	position[0] += 0.5f;
@@ -33,9 +33,7 @@ bool RayCast(vec3 pos, vec3 forward, float distance, float increaseValue, int de
 
 	while (actualDistance < distance)
 	{
-		struct RGB* color = (struct RGB*)malloc(sizeof(struct RGB));
-
-		float height = GetSingleNoiseVal(position[0], position[2], color, &terrain) * ChunkHeight/2;
+		float height = GetSingleNoiseVal(position[0], position[2], NULL, heightNoise) * ChunkHeight/2;
 
 		int actualBlock[] = {RoundPos(position[0]), RoundPos(position[1]), RoundPos(position[2])};
 		dest[0] = RoundPos(position[0]);

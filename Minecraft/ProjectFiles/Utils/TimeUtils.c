@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "../Utils/Headers/UtilsHeaders.h"
+
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 

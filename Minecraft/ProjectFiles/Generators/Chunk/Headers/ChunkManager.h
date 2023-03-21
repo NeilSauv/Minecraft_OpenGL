@@ -3,8 +3,6 @@
 
 #define ChunkView 20
 
-extern struct osn_context* ctx;
-
 int Modulo(int a, int b);
 
 void GenerateChunks();
@@ -13,8 +11,8 @@ void DrawChunk();
 
 void Update();
 
-void UpdateDestroyed();
-
 void ClearChunk();
+
+void UpdateDestroyed(int chunkIndex);
 
 #endif // !CHUNK_MANAGER

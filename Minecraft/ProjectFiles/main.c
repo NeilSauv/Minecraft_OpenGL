@@ -3,29 +3,23 @@
 #include <cglm/cglm.h>
 #include <math.h>
 
-#define NK_IMPLEMENTATION
-#include "Externals/nuklear/nuklear.h"
+#define Debug
+
+#include "main.h"
 
 //Generators
-#include "Generators/Noises/Headers/SimplexNoise.h"
-#include "Generators/Chunk/Headers/ChunkManager.h"
-#include "Generators/Chunk/Headers/Region.h"
-#include "Generators/Noises/Headers/NoiseStruct.h"
+#include "Generators/Noises/Headers/NoisesHeaders.h"
+#include "Generators/Chunk/Headers/ChunkHeaders.h"
 //Textures
-#include "Textures/Headers/TextureSet.h"
-#include "Textures/Headers/DrawNoise.h"
-#include "Textures/Headers/ColorMap.h"
-#include "Textures/Headers/BitmapCreator.h"
-#include "Shaders/Headers/Shader.h"
+#include "Textures/Headers/TextureHeaders.h"
+//Shaders
+#include "Shaders/Headers/ShaderHeaders.h"
 //Utils
-#include "Utils/Headers/TimeUtils.h"
-#include "Utils/Headers/FileUtils.h"
+#include "Utils/Headers/UtilsHeaders.h"
 //Player
-#include "Player/Headers/Camera.h"
-#include "Player/Headers/Controller.h"
-#include "Player/Headers/Destroy.h"
+#include "Player/Headers/PlayerHeaders.h"
 //Physics
-#include "Physics/Headers/Ray.h"
+#include "Physics/Headers/PhysicsHeaders.h"
 
 
 GLFWwindow* window;
@@ -40,11 +34,16 @@ const unsigned int SCR_HEIGHT = 1000;
 
 int main()
 {
-    OpenFile();
+#ifdef Debug
+    OpenFile(); // Open print.txt for debbuging output
+#endif
     
-    InitTerrainRegions();
-    
-    InitNoise(&terrain);
+    InitNoiseStruct();
+
+    InitHeightColorScheme();
+
+    InitNoise(heightNoise);
+    InitNoise(temperatureNoise);
     
     //Window
     CreateWindow();
@@ -52,15 +51,14 @@ int main()
     //Shaders
     ReadShader("ProjectFiles/Shaders/BasicVertices.vert", "ProjectFiles/Shaders/BasicColor.frag");
 
-    
+    // Init Regions
     InitRegion();
 
     //Mesh
     GenerateChunks();
 
-    //DrawNoise();
-
-    //CreateColorImage();
+    //Draw
+    DrawNoise(temperatureNoise);
 
     //Texture
     ApplyTexture();
@@ -71,8 +69,6 @@ int main()
     glm_perspective(glm_rad(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f, projection);
 
     glfwSetCursorPos(window, 1000 / 2, 1000 / 2);
-
-    DrawNoise(&terrain);
     
     // render loop
     // -----------
@@ -137,7 +133,7 @@ int main()
         glfwPollEvents();
     }
     //Clear
-    ClearBiomes();
+    FreeColorSchemes();
     ClearChunk();
     ClearTexture();
     ClearShader();
@@ -146,10 +142,11 @@ int main()
 
     FreeStruct();
     
+#ifdef Debug
     CloseFile();
+#endif
 
     return 0;
-    
 }
 
 void CreateWindow()

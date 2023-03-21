@@ -1,6 +1,9 @@
 #ifndef BITMAP_CREATOR
 #define BITMAP_CREATOR
 
-void CreateBMP(struct NoiseObj* noise);
+#include "../../Generators/Noises/Headers/NoisesHeaders.h"
+
+struct SimplexNoiseObj;
+void CreateBMP(struct SimplexNoiseObj* noise);
 
 #endif

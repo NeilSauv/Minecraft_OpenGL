@@ -4,14 +4,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "Headers/ChunkGenerator.h"
-#include "Headers/ChunkManager.h"
-#include "../Noises/Headers/SimplexNoise.h"
-#include "../../Player/Headers/Controller.h"
-#include "../../Utils/Headers/FileUtils.h"
-#include "../../Player/Headers/Destroy.h"
-#include "../../Utils/Headers/List.h"
-#include "../../Textures/Headers/ColorMap.h"
+#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
+#include "../../Generators/Noises/Headers/NoisesHeaders.h"
+#include "../../Player/Headers/PlayerHeaders.h"
+#include "../../Utils/Headers/UtilsHeaders.h"
+#include "../../Textures/Headers/TextureHeaders.h"
 
 #define ChunkView 20
 
@@ -26,8 +23,6 @@ int count = 0;
 int offsetX = 0;
 int offsetZ = 0;
 
-struct osn_context* ctx;
-
 void GenerateChunks()
 {
     glGenVertexArrays(chunks,(GLuint *) &VAO); //Generate vertex array
@@ -38,13 +33,13 @@ void GenerateChunks()
     glGenBuffers(chunks,(GLuint *) &instanceVBO);
     glGenBuffers(chunks,(GLuint *) &renderVBO);
 
-    open_simplex_noise(1, &ctx);
+    open_simplex_noise(1, heightNoise->ctx);
 
     for (int x = -ChunkView; x < ChunkView; x += 1)
     {
         for (int z = -ChunkView; z < ChunkView; z += 1)
         {
-            CreateChunk(x*ChunkSize, -ChunkHeight/2, z*ChunkSize, count, false);
+            CreateChunk((float)x*ChunkSize, (float)-ChunkHeight / 2, (float) z * ChunkSize, count, false);
             count++;
         }
     }
@@ -101,7 +96,7 @@ void Update()
             int index = i + ChunkView;
             int sign = (addAxisX * (-2) - 1);
             int xOffset = offsetX + addAxisX;
-            CreateChunk((sign * ChunkView + xOffset) * ChunkSize, -ChunkHeight / 2, (i+offsetZ) * ChunkSize, Modulo(Modulo(index + offsetZ, ChunkLength) + ChunkLength * xOffset, count), false);
+            CreateChunk((float)(sign * ChunkView + xOffset) * ChunkSize, (float) - ChunkHeight / 2, (float)(i + offsetZ) * ChunkSize, Modulo(Modulo(index + offsetZ, ChunkLength) + ChunkLength * xOffset, count), false);
         }
     }
 
@@ -113,7 +108,7 @@ void Update()
             int index = i + ChunkView;
             int sign = (addAxisZ * (-2) - 1);
             int zOffset = offsetZ + addAxisZ;
-            CreateChunk((i+offsetX) * ChunkSize, -ChunkHeight / 2, (sign * ChunkView + zOffset) * ChunkSize, ModuloZ(Modulo(index + offsetX,ChunkLength) * ChunkLength + zOffset, ChunkLength, Modulo(index + offsetX, ChunkLength)), false);
+            CreateChunk((float)(i+offsetX) * ChunkSize, (float) - ChunkHeight / 2, (float)(sign * ChunkView + zOffset) * ChunkSize, ModuloZ(Modulo(index + offsetX, ChunkLength) * ChunkLength + zOffset, ChunkLength, Modulo(index + offsetX, ChunkLength)), false);
         }
     }
 
@@ -131,7 +126,7 @@ void UpdateDestroyed(int chunkIndex)
             {
                 offsetX = 0;
                 offsetZ = 0;
-                CreateChunk((x + offsetX) * ChunkSize, -ChunkHeight / 2, (z + offsetZ) * ChunkSize, i, true);
+                CreateChunk((float)(x + offsetX) * ChunkSize, (float) - ChunkHeight / 2, (float)(z + offsetZ) * ChunkSize, i, true);
             }
             i++;
         }

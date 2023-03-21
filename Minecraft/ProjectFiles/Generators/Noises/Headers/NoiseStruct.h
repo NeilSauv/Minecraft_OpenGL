@@ -2,12 +2,22 @@
 #define NOISE_STRUCT
 
 #include "../../Chunk/Headers/ChunkGenerator.h"
+#include "../../../Textures/Headers/ColorMap.h"
 
-typedef struct NoiseObj 
+typedef enum NoiseNameEnum
 {
-	enum NoiseName name;
-	struct osn_context* ctx;
-	struct RGB* noiseMap[ChunkSize * ChunkView * 2][ChunkSize * ChunkView * 2];
+	TERRAIN,
+	BIOME_TEMP,
+	BIOME_HUM
+}NoiseNameEnum;
+
+struct SimplexNoiseObj
+{
+	enum NoiseNameEnum name;
+	struct osn_context** ctx;
+	struct ColorScheme* colorScheme;
+	struct BlockInfoStruct*** blocks;
+	struct RGB*** noiseMap;
 
 	float scale;
 	int octaves;
@@ -18,31 +28,13 @@ typedef struct NoiseObj
 
 	float maxNoiseHeight;
 	float minNoiseHeight;
-}NoiseObj;
-
-extern enum NoiseName
-{
-	TERRAIN,
-	BIOME_TEMP,
-	BIOME_HUM
 };
 
-extern NoiseObj terrain =
-{
-	.name = TERRAIN,
-	.ctx = NULL,
-	.noiseMap = NULL,
+typedef struct SimplexNoiseObj SimplexNoiseObj;
 
-	.scale = 200.0f,
-	.octaves = 5,
-	.persistance = 0.5f,
-	.lacunarity = 2.0f,
-	.amplitudeVal = 1.7f,
-	.frequencyVal = 1.0f,
+SimplexNoiseObj* heightNoise;
+SimplexNoiseObj* temperatureNoise;
 
-	.maxNoiseHeight = 0.864365f,
-	.minNoiseHeight = -0.864366f
-};
-
+void InitNoiseStruct();
 
 #endif

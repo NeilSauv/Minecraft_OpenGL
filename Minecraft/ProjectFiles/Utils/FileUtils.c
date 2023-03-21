@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cglm/cglm.h>
-#include "Headers/FileUtils.h"
+
+#include "../Utils/Headers/UtilsHeaders.h"
 
 FILE* file;
 char* path = "../print.txt";

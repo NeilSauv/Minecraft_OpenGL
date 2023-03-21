@@ -1,30 +1,45 @@
 #ifndef COLOR_MAP
 #define COLOR_MAP
 
-#include "Block.h"
+#include "../../Textures/Headers/TextureHeaders.h"
 
-#define BiomeCount 5
-
-struct RGB {
+struct RGB
+{
 	unsigned int red;
 	unsigned int green;
 	unsigned int blue;
-	enum Block block;
-	float height;
 };
 
-struct terrainType {
-	char* name;
-	float height;
+typedef struct RGB RGB;
+
+struct Scheme
+{
+	float limit;
 	struct RGB* color;
+	enum BlockTypeEnum block;
+	struct Scheme* next;
 };
 
-extern struct terrainType* terrainRegions[BiomeCount];
+typedef struct Scheme Scheme;
 
-void AddRegion(char name[], float height, int red, int green, int blue);
+struct ColorScheme
+{
+	int size;
+	int useBlock;
+	struct Scheme* begin;
+	struct Scheme* end;
+};
 
-void InitTerrainRegions();
+typedef struct ColorScheme ColorScheme;
 
-void ClearBiomes();
+struct ColorScheme* heightColorScheme;
+
+struct ColorScheme* tempColorScheme;
+
+void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, int blue,struct ColorScheme* colorScheme);
+
+void InitHeightColorScheme();
+
+void FreeColorSchemes();
 
 #endif // !COLOR_MAP

@@ -1,29 +1,31 @@
 #ifndef DESTROY
 #define DESTROY
 
-#include "../../Utils/Headers/List.h"
+#include "../../Utils/Headers/UtilsHeaders.h"
 
-struct destroyList
+struct DestroyList
 {
 	int data;
-	struct destroyList* next;
+	struct DestroyList* next;
 };
+
+typedef struct DestroyList DestroyList;
 /*
 struct chunkList
 {
 	int index;
-	struct destroyList* destroyList;
+	struct DestroyList* destroyList;
 	struct chunkList* nextChunk;
 };*/
 
-extern struct destroyList* list;
+extern struct DestroyList* list;
 
 extern int size;
 
-void Add(struct destroyList* list, int element);
+void Add(struct DestroyList* list, int element);
 
 void DestroyBlock();
 
-int GetList(struct destroyList* list, int n);
+int GetList(struct DestroyList* list, int n);
 
 #endif // !DESTROY

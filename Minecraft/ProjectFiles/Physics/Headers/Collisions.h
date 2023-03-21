@@ -5,4 +5,4 @@
 
 extern  bool MovesCollisions(vec3 targetCameraPos);
 
-#endif // !COLLISIONS
+#endif

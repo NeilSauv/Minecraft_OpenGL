@@ -11,7 +11,7 @@ struct regionList
 {
 	int x;
 	int z;
-	struct destroyList* destroyList[RegionSize * RegionSize];
+	struct DestroyList* destroyList[RegionSize * RegionSize];
 };
 
 extern struct regionList* regions[RegionCount][RegionCount];

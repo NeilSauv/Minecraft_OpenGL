@@ -1,61 +1,63 @@
 #include <stdlib.h>
-#include "Headers/Block.h"
 
-#define BiomeCount 5
+#include "../Textures/Headers/TextureHeaders.h"
+#include "../Utils/Headers/UtilsHeaders.h"
 
-void AddRegion(char name[], float height, int red, int green, int blue, enum Block block);
-
-struct RGB {
-	unsigned int red;
-	unsigned int green;
-	unsigned int blue;
-	enum Block block;
-	float height;
-};
-
-struct terrainType {
-	char* name;
-	float height;
-	struct RGB* color;
-};
-
-struct terrainType* terrainRegions[BiomeCount];
-int i = 0;
-
-void AddRegion(char name[], float height, int red, int green, int blue, enum Block block)
+void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, int blue, ColorScheme* colorScheme)
 {
 	struct RGB* color = (struct RGB*)malloc(sizeof(struct RGB));
 
 	color->red = red;
 	color->green = green;
 	color->blue = blue;
-	color->height = height;
-	color->block = block;
 
-	struct terrainType* terrain = (struct terrainType*)malloc(sizeof(struct terrainType));
-	terrain->height = height;
-	terrain->name = name;
-	terrain->color = color;
+	Scheme* scheme = malloc(sizeof(Scheme));
+	scheme->limit = limit;
+	scheme->color = color;
+	scheme->block = block;
+	scheme->next = NULL;
 
-	terrainRegions[i] = terrain;
-	i++;
+	if (colorScheme->size == 0)
+		colorScheme->begin = scheme;
+	else
+		colorScheme->end->next = scheme;
+
+	colorScheme->end = scheme;
+	colorScheme->size++;
 }
 
-void InitTerrainRegions()
+
+void InitHeightColorScheme()
 {
-	AddRegion("Snow", 0.8f, 255, 255, 255, Snow);
-	AddRegion("Stone", 0.7f, 163, 163, 163, Stone);
-	AddRegion("Grass", 0.54f, 0, 255, 0, Grass);
-	AddRegion("Sand", 0.5f, 200, 255, 0, Sand);
-	AddRegion("Water", 0.0f, 0, 0, 255, Water);
+	heightColorScheme = malloc(sizeof(ColorScheme));
+	heightColorScheme->begin = NULL;
+	heightColorScheme->end = NULL;
+	heightColorScheme->size = 0;
+	heightColorScheme->useBlock = 1;
+
+	AddColorScheme(Snow, 0.8f, 255, 255, 255, heightColorScheme);
+	AddColorScheme(Stone, 0.7f, 163, 163, 163, heightColorScheme);
+	AddColorScheme(Grass, 0.54f, 0, 255, 0, heightColorScheme);
+	AddColorScheme(Sand, 0.5f, 200, 255, 0, heightColorScheme);
+	AddColorScheme(Water, 0.0f, 0, 0, 255, heightColorScheme);
 }
 
-void ClearBiomes()
+void FreeColorScheme(ColorScheme* colorScheme)
 {
-	while (i > 0)
+	Scheme* scheme = colorScheme->begin;
+	Scheme* temp = malloc(sizeof(Scheme));
+	while (scheme != NULL)
 	{
-		free(terrainRegions[i-1]->color);
-		free(terrainRegions[i-1]);
-		i--;
+		temp = scheme;
+		scheme = temp->next;
+		free(temp);
 	}
+
+	free(colorScheme);
+}
+
+void FreeColorSchemes()
+{
+	FreeColorScheme(heightColorScheme);
+	FreeColorScheme(tempColorScheme);
 }

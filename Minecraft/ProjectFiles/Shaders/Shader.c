@@ -1,8 +1,9 @@
-#include "Headers/Shader.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "Headers/ShaderHeaders.h"
 
 unsigned int vertexShader;
 unsigned int fragmentShader;

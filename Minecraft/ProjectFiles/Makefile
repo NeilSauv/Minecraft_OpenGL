@@ -5,12 +5,12 @@ LIBRARIES = -L/mnt/c/Users/neils/Documents/opengl/
 
 CFLAGS = -Wall -Werror
 FREEFLAGS = -w
-LDFLAGS = -lglfw -lrt -lm -ldl -O3
+LDFLAGS = -lglfw -lrt -lm -ldl
 TARGET = main
 
 SRC =  main.c glad.c
 SRC += Generators/Chunk/ChunkGenerator.c Generators/Chunk/ChunkManager.c Generators/Chunk/Region.c
-SRC += Generators/Noises/SimplexNoise.c
+SRC += Generators/Noises/SimplexNoise.c Generators/Noises/NoiseStruct.c
 
 SRC += Physics/Collisions.c Physics/Ray.c
 
@@ -18,12 +18,9 @@ SRC += Player/Camera.c Player/Controller.c Player/Destroy.c
 
 SRC += Shaders/Shader.c
 
-SRC += Textures/BitmapCreator.c Textures/TextureSet.c Textures/ColorMap.c Textures/DrawNoise.c
+SRC += Textures/BitmapCreator.c Textures/TextureSet.c Textures/ColorMap.c Textures/DrawNoise.c Textures/Block.c
 
-SRC += Utils/FileUtils.c Utils/List.c Utils/RayUtils.c Utils/TimeUtils.c
-
-SRC += Externals/nanovg/android.c Externals/nanovg/blendish.c Externals/nanovg/nanosvg.c Externals/nanovg/nanosvgrast.c Externals/nanovg/nanovg.c Externals/nanovg/nanovg_gl.c Externals/nanovg/nanovg_gl_utils.c
-
+SRC += Utils/FileUtils.c Utils/List.c Utils/RayUtils.c Utils/TimeUtils.c Utils/Errors.c
 
 OBJ = ${SRC:.c=.o}
 headers =

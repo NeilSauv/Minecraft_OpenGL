@@ -3,16 +3,11 @@
 #include <cglm/cglm.h>
 #include <stdlib.h>
 
-#include "../Noises/Headers/SimplexNoise.h"
-#include "Headers/ChunkManager.h"
-#include "../../Player/Headers/Destroy.h"
-#include "../../Utils/Headers/FileUtils.h"
-#include "../../Player/Headers/Destroy.h"
-#include "Headers/Region.h"
-#include "../../Textures/Headers/DrawNoise.h"
-#include "../../Textures/Headers/ColorMap.h"
-#include "../../Textures/Headers/Block.h"
-#include "../../Generators/Noises/Headers/NoiseStruct.h"
+#include "../../Generators/Noises/Headers/NoisesHeaders.h"
+#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
+#include "../../Player/Headers/PlayerHeaders.h"
+#include "../../Utils/Headers/UtilsHeaders.h"
+#include "../../Textures/Headers/TextureHeaders.h"
 
 #define ChunkSize 16
 #define ChunkHeight 256
@@ -158,7 +153,7 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
 
         struct regionList* region = regions[regionX][regionZ];
 
-        struct destroyList* destroy = region->destroyList[i];
+        struct DestroyList* destroy = region->destroyList[i];
         
         while (destroy != NULL)
         {
@@ -167,9 +162,9 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
         }
     } 
     
-    struct RGB* colours[ChunkSize * ChunkSize];
+    BlockInfoStruct** blocks = malloc(ChunkSize*ChunkSize*sizeof(BlockInfoStruct*));
 
-    GetNoiseVal(xAxis, zAxis, colours, &terrain);
+    GetNoiseMap(xAxis, zAxis, heightNoise, blocks);
 
     
     int renderCount = 0;
@@ -178,7 +173,7 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
     {
         for (int z = 0; z < ChunkSize; z++)
         {
-            int height = colours[z * ChunkSize + x]->height*(ChunkHeight/2);
+            int height = blocks[z * ChunkSize + x]->height*(ChunkHeight/2);
             bool found = true;
 
             for (int y = ChunkHeight; y > 0 && found; y--)
@@ -187,7 +182,7 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
 
                 if (rendering[index * 4] != 2 && (y + yAxis == height || y + yAxis < WaterLevel))
                 {
-                    enum Block block;
+                    enum BlockTypeEnum block = Air;
 
                     if (y + yAxis > height)
                     {
@@ -196,31 +191,27 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
                     }
                     else if (y + yAxis == height)
                     {
-                        block = colours[z * ChunkSize + x]->block;
+                        block = blocks[z * ChunkSize + x]->blockType;
                     }
                     else if (y + yAxis < height || y+ yAxis < WaterLevel)
                     {
                         found = false;
-                        continue;
                     }
-
-
-                        translations[renderCount][0] = x + xAxis;
-                        translations[renderCount][1] = y + yAxis;
-                        translations[renderCount][2] = z + zAxis;
-                       
-                        rendering[(renderCount) * 4 + 1] = block % 25;
-                        rendering[(renderCount) * 4 + 2] = (int)(block / 25);
-
-                        rendering[(renderCount) * 4] = 1;
-
-                        int num = (x - y + z) % 4;
-
-                        rendering[renderCount *4 + 3] = num;
-
-                        renderCount++;
                     
+                    translations[renderCount][0] = x + xAxis;
+                    translations[renderCount][1] = y + yAxis;
+                    translations[renderCount][2] = z + zAxis;
+                       
+                    rendering[(renderCount) * 4 + 1] = (int)block % 25;
+                    rendering[(renderCount) * 4 + 2] = (int)((float)block / 25);
 
+                    rendering[(renderCount) * 4] = 1;
+
+                    int num = (x - y + z) % 4;
+
+                    rendering[renderCount *4 + 3] = num;
+
+                    renderCount++;
                 }
 
             }

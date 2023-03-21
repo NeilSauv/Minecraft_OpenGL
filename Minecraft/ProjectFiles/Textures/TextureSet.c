@@ -1,9 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
-
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "../Textures/Headers/TextureHeaders.h"
 
 unsigned int texture1;
 unsigned int selectedTexture;

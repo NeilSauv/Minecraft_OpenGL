@@ -3,9 +3,9 @@
 #include <string.h>
 #include <malloc.h>
 
-#include "Headers/DrawNoise.h"
-#include "../Utils/Headers/FileUtils.h"
-#include "../Generators/Noises/Headers/NoiseStruct.h"
+#include "../Textures/Headers/TextureHeaders.h"
+#include "../Utils/Headers/UtilsHeaders.h"
+#include "../Generators/Noises/Headers/NoisesHeaders.h"
 
 #define _height ChunkSize*ChunkView*2
 #define _width  ChunkSize*ChunkView*2
@@ -19,8 +19,8 @@
 #define pixel 0xFF
 #pragma pack(push,1)
 
-void ColorBMP(NoiseObj* noise);
-void MonoBMP(NoiseObj* noise);
+void ColorBMP(SimplexNoiseObj* noise);
+void MonoBMP(SimplexNoiseObj* noise);
 
 typedef struct {
     char signature[2];
@@ -48,18 +48,19 @@ typedef struct {
 } bitmap;
 #pragma pack(pop)
 
-void CreateBMP(NoiseObj* noise) 
+void CreateBMP(SimplexNoiseObj* noise) 
 {
     MonoBMP(noise);
     ColorBMP(noise);
 }
 
-void ColorBMP(NoiseObj* noise)
+void ColorBMP(SimplexNoiseObj* noise)
 {
     FILE* fp = fopen("MapColor.bmp", "wb");
 
-    bitmap* pbitmap = (bitmap*)calloc(1, sizeof(bitmap));
-    unsigned char* pixels = malloc(_height * _width * 3);
+    bitmap* pbitmap = calloc(1, sizeof(bitmap));
+
+    unsigned char* pixels = calloc(1, _height * _width * 3* sizeof(unsigned char));
 
     strcpy(pbitmap->fileheader.signature, "BM");
     pbitmap->fileheader.filesize = _filesize;
@@ -91,11 +92,11 @@ void ColorBMP(NoiseObj* noise)
     free(pixels);
 }
 
-void MonoBMP(NoiseObj* noise)
+void MonoBMP(SimplexNoiseObj* noise)
 {
     FILE* fp = fopen("MapBW.bmp", "wb");
 
-    bitmap* pbitmap = (bitmap*)calloc(1, sizeof(bitmap));
+    bitmap* pbitmap = calloc(1, sizeof(bitmap));
     unsigned char* pixels = malloc(_height * _width * 3);
 
     strcpy(pbitmap->fileheader.signature, "BM");
@@ -115,7 +116,7 @@ void MonoBMP(NoiseObj* noise)
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;
-            int val = (noise->noiseMap[x][y]->height + 1) / 2 * 255;
+            int val = (noise->blocks[x][y]->height + 1) / 2 * 255;
             pixels[p + 0] = val;//blue
             pixels[p + 1] = val;//green
             pixels[p + 2] = val;//red   

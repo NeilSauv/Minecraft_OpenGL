@@ -1,9 +1,8 @@
-#include "../../Player/Headers/Destroy.h"
-#include "Headers/ChunkManager.h"
-#include "Headers/ChunkGenerator.h"
-
-#include "../../Utils/Headers/FileUtils.h"
 #include <math.h>
+
+#include "../../Player/Headers/PlayerHeaders.h"
+#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
+#include "../../Utils/Headers/UtilsHeaders.h"
 
 
 #define RegionCount 4
@@ -12,17 +11,9 @@
 int xOffset = 0;
 int zOffset = 0;
 
-struct regionList
-{
-	int x;
-	int z;
-	struct destroyList* destroyList[RegionSize*RegionSize];
-};
-
-
 struct regionList* regions[RegionCount][RegionCount];
 struct regionList* actualRegion;
-struct destroyList* destroyList;
+DestroyList* destroyList;
 
 
 float RoundRegion(float pos);
@@ -47,7 +38,7 @@ void InitRegion()
 
 int AddBlockState(float pos[])
 {
-	int renderIndex = (Modulo(pos[0], ChunkSize) * ChunkSize + Modulo(pos[2] , ChunkSize)) * ChunkHeight + pos[1] + ChunkHeight/2;
+	int renderIndex = (Modulo((int)pos[0], ChunkSize) * ChunkSize + Modulo((int)pos[2] , ChunkSize)) * ChunkHeight + (int)pos[1] + ChunkHeight/2;
 	
 	float position[] = {(float) pos[0], (float) pos[2]};
 	position[0] -= xOffset * RegionSize * ChunkSize;
@@ -67,8 +58,8 @@ int AddBlockState(float pos[])
 	if (pos[2] < 0)
 		zAdd = 1;
 
-	int x = RoundRegion((float)((int) pos[0] % chunkRegion) / (ChunkSize + xAdd));
-	int z = RoundRegion((float)((int) pos[2] % chunkRegion) / (ChunkSize + zAdd));
+	int x = (int) RoundRegion((float)((int) pos[0] % chunkRegion) / (ChunkSize + xAdd));
+	int z = (int) RoundRegion((float)((int) pos[2] % chunkRegion) / (ChunkSize + zAdd));
 
 	int chunkIndex = (x + ChunkView) * ChunkView * 2 + z + ChunkView;
 
@@ -76,7 +67,7 @@ int AddBlockState(float pos[])
 
 	if (actualRegion->destroyList[chunkIndex] == NULL)
 	{
-		destroyList = (struct destroyList*)malloc(sizeof(struct destroyList));
+		destroyList = malloc(sizeof(DestroyList));
 		destroyList->data = renderIndex;
 		destroyList->next = NULL;
 		actualRegion->destroyList[chunkIndex] = destroyList;
@@ -112,8 +103,8 @@ bool DestroyPossible(int pos[])
 	if (pos[2] < 0)
 		zAdd = 1;
 
-	int x = RoundRegion((float)(pos[0] % chunkRegion) / (ChunkSize + xAdd));
-	int z = RoundRegion((float)(pos[2] % chunkRegion) / (ChunkSize + zAdd));
+	int x = (int) RoundRegion((float)(pos[0] % chunkRegion) / (ChunkSize + xAdd));
+	int z = (int) RoundRegion((float)(pos[2] % chunkRegion) / (ChunkSize + zAdd));
 
 	int chunkIndex = (x + ChunkView) * ChunkView * 2 + z + ChunkView;
 
@@ -152,7 +143,7 @@ void FreeStruct()
 
 int GetRegion(int pos)
 {
-	return RoundRegion(pos / (RegionSize * ChunkSize));
+	return (int)RoundRegion((float)pos / (RegionSize * ChunkSize));
 }
 
 float RoundRegion(float pos)

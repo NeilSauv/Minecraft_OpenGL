@@ -75,6 +75,33 @@
     <ClInclude Include="ProjectFiles\Utils\Headers\TimeUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ProjectFiles\Generators\Noises\Headers\NoiseStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Utils\Headers\Errors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Generators\Chunk\Headers\ChunkHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Generators\Noises\Headers\NoisesHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Physics\Headers\PhysicsHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Player\Headers\PlayerHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Shaders\Headers\ShaderHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Textures\Headers\TextureHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectFiles\Utils\Headers\UtilsHeaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProjectFiles\Generators\Chunk\ChunkGenerator.c">
@@ -135,6 +162,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ProjectFiles\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Utils\Errors.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Generators\Noises\NoiseStruct.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFiles\Textures\Block.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

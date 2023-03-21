@@ -1,8 +1,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
+
 #include "../main.h"
-#include "../Utils/Headers/FileUtils.h"
+
+#include "../Utils/Headers/UtilsHeaders.h"
+#include "../Player/Headers/PlayerHeaders.h"
 
 vec3 forward = { 0.0f, 0.0f, -1.0f };
 vec3 up = { 0.0f, 1.0f, 0.0f };

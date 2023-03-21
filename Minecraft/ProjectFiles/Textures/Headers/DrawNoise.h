@@ -1,18 +1,17 @@
 #ifndef DRAW_NOISE
 #define DRAW_NOISE
 
-#include "../../Generators/Chunk/Headers/ChunkGenerator.h"
-#include "ColorMap.h"
+#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
+#include "../../Textures/Headers/TextureHeaders.h"
+#include "../../Generators/Noises/Headers/NoisesHeaders.h"
 
-void DrawNoise(struct NoiseObj* noise);
+void DrawNoise(struct SimplexNoiseObj* noise);
 
-void InitNoise(struct NoiseObj* noise);
+void InitNoise(struct SimplexNoiseObj* noise);
 
-void GetNoiseVal(int x, int y, struct RGB* dest[],struct NoiseObj* noise);
+void GetNoiseMap(int x, int y,struct SimplexNoiseObj* noise, struct BlockInfoStruct** blocks);
 
-float GetSingleNoiseVal(int x, int y, struct RGB* dest,struct NoiseObj* noise);
-
-extern struct RGB* noiseMap[ChunkSize * ChunkView * 2][ChunkSize * ChunkView * 2];
+float GetSingleNoiseVal(int x, int y, struct BlockInfoStruct* block, struct SimplexNoiseObj* noise);
 
 
 #endif // !DRAW_NOISE
