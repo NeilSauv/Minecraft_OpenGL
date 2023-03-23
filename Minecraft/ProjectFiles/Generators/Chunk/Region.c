@@ -16,7 +16,7 @@ struct regionList* actualRegion;
 DestroyList* destroyList;
 
 
-float RoundRegion(float pos);
+int RoundRegion(float pos);
 
 void InitRegion()
 {
@@ -146,7 +146,7 @@ int GetRegion(int pos)
 	return (int)RoundRegion((float)pos / (RegionSize * ChunkSize));
 }
 
-float RoundRegion(float pos)
+int RoundRegion(float pos)
 {
 	if (pos >= 0)
 		return (int)pos;

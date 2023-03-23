@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <cglm/cglm.h>
 
 #include "../Utils/Headers/UtilsHeaders.h"

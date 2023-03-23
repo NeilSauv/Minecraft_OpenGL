@@ -12,7 +12,10 @@
 #define ChunkSize 16
 #define ChunkHeight 256
 
-unsigned int VBO[ChunkView * ChunkView * 4], VAO[ChunkView * ChunkView * 4 ], EBO[ChunkView * ChunkView * 4];
+unsigned int VBO[ChunkView * ChunkView * 4];
+unsigned int VAO[ChunkView * ChunkView * 4];
+unsigned int EBO[ChunkView * ChunkView * 4];
+
 unsigned int faceVBO[ChunkView * ChunkView * 4];
 unsigned int instanceVBO[ChunkView * ChunkView * 4];
 unsigned int renderVBO[ChunkView * ChunkView * 4];
@@ -62,9 +65,6 @@ float faces[] = {
 };
 
 bool faceSingle = false;
-
-float translations[ChunkSize * ChunkSize * ChunkHeight][3];
-int rendering[ChunkSize * ChunkSize * ChunkHeight * 4];
 
 int renderBlock[ChunkSize * ChunkSize * ChunkHeight * 3];
 
@@ -127,7 +127,7 @@ unsigned int indices[] = {
     22, 21, 23,
 };
 
-void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock)
+void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
 {
 
     //Vertices
@@ -145,11 +145,11 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[i]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    
+    /*
     if (destroyBlock)
     {
-        int regionX = (int) RoundRegion(xAxis / (RegionSize * ChunkSize)) + 1;
-        int regionZ = (int) RoundRegion(zAxis / (RegionSize * ChunkSize)) + 1;
+        int regionX = RoundRegion(xAxis / (RegionSize * ChunkSize)) + 1;
+        int regionZ = RoundRegion(zAxis / (RegionSize * ChunkSize)) + 1;
 
         struct regionList* region = regions[regionX][regionZ];
 
@@ -161,11 +161,10 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
             destroy = destroy->next;
         }
     } 
-    
+    */
     BlockInfoStruct** blocks = malloc(ChunkSize*ChunkSize*sizeof(BlockInfoStruct*));
 
     GetNoiseMap(xAxis, zAxis, heightNoise, blocks);
-
     
     int renderCount = 0;
 
@@ -173,52 +172,41 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
     {
         for (int z = 0; z < ChunkSize; z++)
         {
-            int height = blocks[z * ChunkSize + x]->height*(ChunkHeight/2);
-            bool found = true;
+            int height = blocks[z * ChunkSize + x]->height* (ChunkHeight / 2);
+            bool blockNotFound = true;
+            bool waterNotFound = true;
 
-            for (int y = ChunkHeight; y > 0 && found; y--)
+            for (int y = ChunkHeight; y > 0 && blockNotFound; y--)
             {
                 int index = (x * ChunkSize + z) * ChunkHeight + y;
 
-                if (rendering[index * 4] != 2 && (y + yAxis == height || y + yAxis < WaterLevel))
+                if (y + yAxis == height || y + yAxis == WaterLevel)
                 {
-                    enum BlockTypeEnum block = Air;
-
-                    if (y + yAxis > height)
+                    BlockTypeEnum block = blocks[z * ChunkSize + x]->blockType;
+                    
+                    if (y + yAxis == WaterLevel)
                     {
                         block = Water;
-                        found = false;
+                        blockNotFound = false;
                     }
                     else if (y + yAxis == height)
                     {
-                        block = blocks[z * ChunkSize + x]->blockType;
+                        blockNotFound = false;
                     }
-                    else if (y + yAxis < height || y+ yAxis < WaterLevel)
-                    {
-                        found = false;
-                    }
-                    
+
                     translations[renderCount][0] = x + xAxis;
                     translations[renderCount][1] = y + yAxis;
                     translations[renderCount][2] = z + zAxis;
-                       
-                    rendering[(renderCount) * 4 + 1] = (int)block % 25;
-                    rendering[(renderCount) * 4 + 2] = (int)((float)block / 25);
-
-                    rendering[(renderCount) * 4] = 1;
-
-                    int num = (x - y + z) % 4;
-
-                    rendering[renderCount *4 + 3] = num;
-
+                                        
+                    rendering[(renderCount) * 4] = block;
+                                        
                     renderCount++;
                 }
-
+                
             }
 
         }
-    }
-
+    }    
     glBindBuffer(GL_ARRAY_BUFFER, faceVBO[i]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(faces), faces, GL_STATIC_DRAW);
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
@@ -226,17 +214,16 @@ void CreateChunk(float xAxis, float yAxis, float zAxis, int i, bool destroyBlock
 
 
     glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * 256, &translations[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vec3) * renderCount, &translations[0], GL_STATIC_DRAW);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(3);
     glVertexAttribDivisor(3, 1);
     
     glBindBuffer(GL_ARRAY_BUFFER, renderVBO[i]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * 256*4, &rendering[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * renderCount*4, &rendering[0], GL_STATIC_DRAW);
     glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, sizeof(int)*4, (void*)0);
     glEnableVertexAttribArray(4);
     glVertexAttribDivisor(4, 1);
-
 }
 
 int multFaces[] = { 0,1,1,1,1,2 };

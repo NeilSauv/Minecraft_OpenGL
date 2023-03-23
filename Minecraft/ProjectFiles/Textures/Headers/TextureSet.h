@@ -8,4 +8,6 @@ void ApplyTexture();
 
 void ClearTexture();
 
+unsigned char* ReadBPM(char* fileName);
+
 #endif

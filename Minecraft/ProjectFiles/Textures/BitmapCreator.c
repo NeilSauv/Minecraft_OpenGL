@@ -6,6 +6,7 @@
 #include "../Textures/Headers/TextureHeaders.h"
 #include "../Utils/Headers/UtilsHeaders.h"
 #include "../Generators/Noises/Headers/NoisesHeaders.h"
+#include "../Generators/Chunk/Headers/ChunkHeaders.h"
 
 #define _height ChunkSize*ChunkView*2
 #define _width  ChunkSize*ChunkView*2
@@ -19,8 +20,8 @@
 #define pixel 0xFF
 #pragma pack(push,1)
 
-void ColorBMP(SimplexNoiseObj* noise);
-void MonoBMP(SimplexNoiseObj* noise);
+void ColorBMP(SimplexNoiseObj* noise, char* name);
+void MonoBMP(SimplexNoiseObj* noise, char* name);
 
 typedef struct {
     char signature[2];
@@ -48,15 +49,49 @@ typedef struct {
 } bitmap;
 #pragma pack(pop)
 
-void CreateBMP(SimplexNoiseObj* noise) 
+char* Concatenate(char* folder, char* fileName, char* extension)
 {
-    MonoBMP(noise);
-    ColorBMP(noise);
+    int lenFolder = 0;
+    int lenFileName = 0;
+    int lenExtension = 0;
+
+    for (int i = 0; folder[i] != 0; i++)
+        lenFolder++;
+
+    for (int i = 0; fileName[i] != 0; i++)
+        lenFileName++;
+
+    for (int i = 0; extension[i] != 0; i++)
+        lenExtension++;
+
+    int total = lenFolder + lenFileName + lenExtension;
+
+    char* path = malloc(sizeof(char) * (total + 1));
+
+    for (int i = 0; i < lenFolder; i++)
+        path[i] = folder[i];
+
+    for (int i = 0; i < lenFileName; i++)
+        path[i + lenFolder] = fileName[i];
+
+    for (int i = 0; i < lenExtension; i++)
+        path[i + lenFolder + lenFileName] = extension[i];
+
+    path[total] = 0;
+
+    return path;
 }
 
-void ColorBMP(SimplexNoiseObj* noise)
+void CreateBMP(SimplexNoiseObj* noise, char* name) 
 {
-    FILE* fp = fopen("MapColor.bmp", "wb");
+    MonoBMP(noise, name);
+    ColorBMP(noise, name);
+}
+
+void ColorBMP(SimplexNoiseObj* noise, char* name)
+{
+    char* path = Concatenate("test/", name, "_RGB.bmp");
+    FILE* fp = fopen(path, "wb");
 
     bitmap* pbitmap = calloc(1, sizeof(bitmap));
 
@@ -75,16 +110,16 @@ void ColorBMP(SimplexNoiseObj* noise)
     pbitmap->bitmapinfoheader.ypixelpermeter = _ypixelpermeter;
     pbitmap->bitmapinfoheader.xpixelpermeter = _xpixelpermeter;
     pbitmap->bitmapinfoheader.numcolorspallette = 0;
-
+    
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;
-            pixels[p + 0] = noise->noiseMap[x][y]->blue;//blue
-            pixels[p + 1] = noise->noiseMap[x][y]->green;//green
-            pixels[p + 2] = noise->noiseMap[x][y]->red;//red   
+            pixels[p + 0] = noise->noiseMap[y][x]->blue;//blue
+            pixels[p + 1] = noise->noiseMap[y][x]->green;//green
+            pixels[p + 2] = noise->noiseMap[y][x]->red;//red   
         }
     }
-
+    
     fwrite(pbitmap, 1, sizeof(bitmap), fp);
     fwrite(pixels, 1, _pixelbytesize, fp);
     fclose(fp);
@@ -92,9 +127,52 @@ void ColorBMP(SimplexNoiseObj* noise)
     free(pixels);
 }
 
-void MonoBMP(SimplexNoiseObj* noise)
+void MonoBMP(SimplexNoiseObj* noise, char* name)
 {
-    FILE* fp = fopen("MapBW.bmp", "wb");
+    char* path = Concatenate("test/", name, "_BW.bmp");
+    FILE* fp = fopen(path, "wb");
+
+
+
+    bitmap* pbitmap = calloc(1, sizeof(bitmap));
+    unsigned char* pixels = malloc(_height * _width * 3);
+
+    strcpy(pbitmap->fileheader.signature, "BM");
+    pbitmap->fileheader.filesize = _filesize;
+    pbitmap->fileheader.fileoffset_to_pixelarray = sizeof(bitmap);
+    pbitmap->bitmapinfoheader.dibheadersize = sizeof(bitmapinfoheader);
+    pbitmap->bitmapinfoheader.width = _width;
+    pbitmap->bitmapinfoheader.height = _height;
+    pbitmap->bitmapinfoheader.planes = _planes;
+    pbitmap->bitmapinfoheader.bitsperpixel = _bitsperpixel;
+    pbitmap->bitmapinfoheader.compression = _compression;
+    pbitmap->bitmapinfoheader.imagesize = _pixelbytesize;
+    pbitmap->bitmapinfoheader.ypixelpermeter = _ypixelpermeter;
+    pbitmap->bitmapinfoheader.xpixelpermeter = _xpixelpermeter;
+    pbitmap->bitmapinfoheader.numcolorspallette = 0;
+    
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
+            int p = (y * _height + x) * 3;
+            int val = (float)(noise->noiseMap[y][x]->height + 1) / 2 * 255;
+            pixels[p + 0] = val;//blue
+            pixels[p + 1] = val;//green
+            pixels[p + 2] = val;//red   
+        }
+    }
+    
+    fwrite(pbitmap, 1, sizeof(bitmap), fp);
+    fwrite(pixels, 1, _pixelbytesize, fp);
+    fclose(fp);
+    free(pbitmap);
+    free(pixels);
+}
+
+void BiomeBPM()
+{
+    char* path = "test/Biomes_RGB.bmp";
+
+    FILE* fp = fopen(path, "wb");
 
     bitmap* pbitmap = calloc(1, sizeof(bitmap));
     unsigned char* pixels = malloc(_height * _width * 3);
@@ -116,10 +194,13 @@ void MonoBMP(SimplexNoiseObj* noise)
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;
-            int val = (noise->blocks[x][y]->height + 1) / 2 * 255;
-            pixels[p + 0] = val;//blue
-            pixels[p + 1] = val;//green
-            pixels[p + 2] = val;//red   
+
+            int temperature = (float)(temperatureNoise->noiseMap[y][x]->height + 1) / 2 * 250;
+            int raining = (float)(rainingNoise->noiseMap[y][x]->height + 1) / 2 * 250;
+
+            pixels[p + 0] = biomeAtlas[temperature * 3 * 250 + raining * 3];//blue
+            pixels[p + 1] = biomeAtlas[temperature * 3 * 250 + raining * 3 + 1];//green
+            pixels[p + 2] = biomeAtlas[temperature * 3 * 250 + raining * 3 + 2];//red   
         }
     }
 

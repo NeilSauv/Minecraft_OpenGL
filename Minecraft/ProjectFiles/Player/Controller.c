@@ -74,7 +74,7 @@ void ProcessInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
         godMod = !godMod;
 
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && groundCheck && !jumped)
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && ((groundCheck && !jumped) || godMod))
     {
         if (!godMod && groundCheck && !jumped)
         {

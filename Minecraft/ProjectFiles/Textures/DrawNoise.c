@@ -12,14 +12,10 @@
 float InvLerp(float a, float b, float v);
 void InitNoise(SimplexNoiseObj* noise);
 
-//struct osn_context* ctx;
-
 unsigned char* pixels;
 
 void InitNoise(SimplexNoiseObj* noise)
 {
-    open_simplex_noise(200, noise->ctx);
-    
     float max = 0;
     float min = 0;
 
@@ -28,8 +24,8 @@ void InitNoise(SimplexNoiseObj* noise)
 
     for (int i = 0; i < noise->octaves; i++)
     {
-        max += (float) (MaxNoiseValue * 2 - 1) * amplitude;
-        min += (float) (MinNoiseValue * 2 - 1) * amplitude;
+        max += (float) (noise->maxNoiseHeight * 2 - 1) * amplitude;
+        min += (float) (noise->minNoiseHeight * 2 - 1) * amplitude;
 
         amplitude *= noise->persistance;
         frequency *= noise->lacunarity;
@@ -40,23 +36,27 @@ void InitNoise(SimplexNoiseObj* noise)
 }
 
 
-BlockTypeEnum GetBlockType(int height, SimplexNoiseObj* noise)
+BlockTypeEnum GetBlockType(float height, SimplexNoiseObj* noise, BlockInfoStruct* block)
 {
     ColorScheme* colorScheme = noise->colorScheme;
 
     if (!colorScheme->useBlock)
+    {
         return Air;
+    }
 
     Scheme* scheme = colorScheme->begin;
-    while (height > scheme->limit)
+    while (height < scheme->limit)
         scheme = scheme->next;
 
-    return scheme->block;
+    block->blockType = scheme->block;
+    block->pattern = colorScheme->patterns[scheme->block];
+
+    return Air;
 }
 
 float GetSingleNoiseVal(int x, int y, BlockInfoStruct* block, SimplexNoiseObj* noise)
 {
-
     float amplitude = noise->amplitudeVal;
     float frequency = noise->frequencyVal;
     float noiseHeight = 0;
@@ -66,9 +66,10 @@ float GetSingleNoiseVal(int x, int y, BlockInfoStruct* block, SimplexNoiseObj* n
         float sampleX = (x + 20) / noise->scale * frequency;
         float sampleY = (y - 40) / noise->scale * frequency;
 
-        float noiseValue = (float)open_simplex_noise2(*noise->ctx, sampleX, sampleY) * 2 - 1.0f;
+        float noiseValue = (float)open_simplex_noise2(noise, sampleX, sampleY) * 2 - 1;
 
         noiseHeight += noiseValue * amplitude;
+
         amplitude *= noise->persistance;
         frequency *= noise->lacunarity;
     }
@@ -78,9 +79,9 @@ float GetSingleNoiseVal(int x, int y, BlockInfoStruct* block, SimplexNoiseObj* n
     if (block == NULL)
         return height;
 
-    block->height = (int)height;
-    block->blockType = GetBlockType((int)height, noise);
+    block->height = height;
 
+    GetBlockType(height, noise, block);
     return height;
 }
 
@@ -103,7 +104,10 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj* noise, BlockInfoStruct** blocks)
                 float sampleX = (col-halfWidth + 20) / noise->scale * frequency;
                 float sampleY = (raw-halfHeight -40) / noise->scale * frequency;
 
-                float noiseValue = (float)open_simplex_noise2(*noise->ctx, sampleX, sampleY) * 2 - 1;
+                if (noise->ctx == NULL)
+                    printf("salut");
+
+                float noiseValue = (float)open_simplex_noise2(noise, sampleX, sampleY) * 2 - 1;
 
                 noiseHeight += noiseValue * amplitude;
                 amplitude *= noise->persistance;
@@ -118,11 +122,12 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj* noise, BlockInfoStruct** blocks)
         for (int col = x; col < ChunkSize + x; col++) {
             float height = InvLerp(noise->minNoiseHeight, noise->maxNoiseHeight, map[(raw - y) * ChunkSize + (col - x)]);
 
-            BlockInfoStruct* block = blocks[(raw - y) * ChunkSize + (col - x)];
+            BlockInfoStruct* block = malloc(sizeof(BlockInfoStruct));
 
-            continue;
-            block->height = (int)height;
-            block->blockType = GetBlockType((int)height, noise);
+            block->height = height;
+            GetBlockType(height, noise, block);
+
+            blocks[(raw - y) * ChunkSize + (col - x)] = block;
         }
     }
 
@@ -132,14 +137,9 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj* noise, BlockInfoStruct** blocks)
 int chunksSize = ChunkSize * ChunkView * 2;
 
 
-void DrawNoise(SimplexNoiseObj* noise)
+void DrawNoise(SimplexNoiseObj* noise, char* name)
 {    
-    for (int y = 0; y < ChunkView; y+=16) {
-        for (int x = 0; x < ChunkView; x+= 16) {
-            GetNoiseMap(x-ChunkSize*ChunkView, y-ChunkSize*ChunkView, noise, noise->blocks[y*ChunkView + x]);            
-        }
-    }
-    CreateBMP(noise);
+    CreateBMP(noise, name);
 }
 
 float InvLerp(float a, float b, float v)

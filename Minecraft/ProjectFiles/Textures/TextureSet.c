@@ -1,8 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb/stb_image.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stb/stb_image.h>
 
 #include "../Textures/Headers/TextureHeaders.h"
 
@@ -70,6 +70,21 @@ void ApplyTexture()
     }
     stbi_image_free(data);   
 }
+
+
+unsigned char* ReadBPM(char* fileName)
+{
+    int width, height, channels;
+    unsigned char* arr = NULL;
+    arr = stbi_load(fileName, &width, &height, &channels, 0);
+    if (arr == NULL) {
+        printf("Error in loading the image\n");
+        exit(1);
+    }
+
+    return arr;
+}
+
 
 void ClearTexture()
 {

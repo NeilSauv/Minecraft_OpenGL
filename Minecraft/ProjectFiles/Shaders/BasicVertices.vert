@@ -1,20 +1,24 @@
-#version 330 core
+#version 430
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in float aFace;
 layout (location = 3) in vec3 aOffset;
 layout (location = 4) in vec4 aRender;
+layout (location = 5) in int aFaceIndex;
 
-out vec4 TexCoord;
+out vec2 TexCoord;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-
+uniform int blockPatterns[42];
 
 void main()
 {
-	int single = aRender.z > 0 ? 0 : 1;
+	if(aRender.y == -1)
+	{
+		return;
+	}
 
 	vec3 pos;
 
@@ -35,11 +39,12 @@ void main()
 		pos = vec3(aPos.z, aPos.y,aPos.x);
 	}
 
-
+	float y = 0;//;blockPatterns[7*6+int(aFace)]/25.0;
+	float x = blockPatterns[6*int(aRender.x)+int(aFace)];
 
 	gl_Position =  projection * view * model * vec4(pos + aOffset, 1.0);
-	float u = (aRender.y + aFace * single)/25.0 + aTexCoord.x /25.0;
-	float v = aRender.z/25.0 + aTexCoord.y /25.0;
+	float u = x/25.0 + aTexCoord.x /25.0;
+	float v = y/25.0 + aTexCoord.y /25.0;
 
-	TexCoord = vec4(u,v, aTexCoord.xy);
+	TexCoord = vec2(u,v);
 }

@@ -4,5 +4,6 @@
 #include "ChunkGenerator.h"
 #include "ChunkManager.h"
 #include "Region.h"
+#include "BiomeGenerator.h"
 
 #endif

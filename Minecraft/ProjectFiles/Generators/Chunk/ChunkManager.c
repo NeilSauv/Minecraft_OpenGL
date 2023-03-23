@@ -33,13 +33,11 @@ void GenerateChunks()
     glGenBuffers(chunks,(GLuint *) &instanceVBO);
     glGenBuffers(chunks,(GLuint *) &renderVBO);
 
-    open_simplex_noise(1, heightNoise->ctx);
-
     for (int x = -ChunkView; x < ChunkView; x += 1)
     {
         for (int z = -ChunkView; z < ChunkView; z += 1)
         {
-            CreateChunk((float)x*ChunkSize, (float)-ChunkHeight / 2, (float) z * ChunkSize, count, false);
+            CreateChunk(x*ChunkSize, -ChunkHeight / 2, z * ChunkSize, count, false);
             count++;
         }
     }

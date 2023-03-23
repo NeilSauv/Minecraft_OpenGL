@@ -3,22 +3,22 @@
 
 #define WaterLevel 64
 
-enum BlockTypeEnum
+typedef enum BlockTypeEnum
 {
-	Air = 0,
-	Grass = 1,
-	Snow = 2,
-	Stone = 3,
-	Water = 4,
-	Sand = 5
-};
-
-typedef enum BlockTypeEnum BlockTypeEnum;
+	Air,
+	Grass,
+	Dirt,
+	Snow,
+	Stone,
+	Water,
+	Sand
+}BlockTypeEnum;
 
 struct BlockInfoStruct
 {
-	int height;
+	float height;
 	enum BlockTypeEnum blockType;
+	struct BlockPattern* pattern;
 };
 
 typedef struct BlockInfoStruct BlockInfoStruct;

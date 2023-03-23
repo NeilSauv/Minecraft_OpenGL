@@ -5,7 +5,7 @@
 #include "../../Textures/Headers/TextureHeaders.h"
 #include "../../Generators/Noises/Headers/NoisesHeaders.h"
 
-void DrawNoise(struct SimplexNoiseObj* noise);
+void DrawNoise(struct SimplexNoiseObj* noise, char* name);
 
 void InitNoise(struct SimplexNoiseObj* noise);
 

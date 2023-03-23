@@ -20,6 +20,8 @@
 #include <errno.h>
 
 #include "Headers/SimplexNoise.h"
+#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
+#include "../../Generators/Noises/Headers/NoisesHeaders.h"
 
 #define STRETCH_CONSTANT_2D (-0.211324865405187)    /* (1 / sqrt(2 + 1) - 1 ) / 2; */
 #define SQUISH_CONSTANT_2D  (0.366025403784439)     /* (sqrt(2 + 1) -1) / 2; */
@@ -165,8 +167,10 @@ int open_simplex_noise_init_perm(struct osn_context* ctx, int16_t p[], int nelem
  * Generates a proper permutation (i.e. doesn't merely perform N successive pair
  * swaps on a base array).  Uses a simple 64-bit LCG.
  */
-int open_simplex_noise(int64_t seed, struct osn_context** ctx)
+int open_simplex_noise(int64_t seed, SimplexNoiseObj* noise)
 {
+	struct osn_context** ctx = &noise->ctx;
+
 	int rc;
 	int16_t source[256];
 	int i;
@@ -223,9 +227,9 @@ void open_simplex_noise_free(struct osn_context* ctx)
 }
 
 /* 2D OpenSimplex (Simplectic) Noise. */
-double open_simplex_noise2(const struct osn_context* ctx, double x, double y)
+double open_simplex_noise2(SimplexNoiseObj* noise, double x, double y)
 {
-
+	struct osn_context* ctx = noise->ctx;
 	/* Place input coordinates onto grid. */
 	double stretchOffset = (x + y) * STRETCH_CONSTANT_2D;
 	double xs = x + stretchOffset;

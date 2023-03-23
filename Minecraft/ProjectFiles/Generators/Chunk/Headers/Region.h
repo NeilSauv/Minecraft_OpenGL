@@ -22,7 +22,7 @@ void InitRegion();
 
 int AddBlockState(float pos[]);
 
-float RoundRegion(float pos);
+int RoundRegion(float pos);
 
 bool DestroyPossible(int pos[]);
 

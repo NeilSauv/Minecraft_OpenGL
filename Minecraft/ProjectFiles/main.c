@@ -37,13 +37,31 @@ int main()
 #ifdef Debug
     OpenFile(); // Open print.txt for debbuging output
 #endif
-    
     InitNoiseStruct();
+
+    open_simplex_noise(200, heightNoise);
+    open_simplex_noise(201, rainingNoise);
+    open_simplex_noise(202, temperatureNoise);
+
+    InitBiomeAtlas();
 
     InitHeightColorScheme();
 
+    InitBlockPattern(heightNoise);
+
     InitNoise(heightNoise);
     InitNoise(temperatureNoise);
+    InitNoise(rainingNoise);
+
+    CompleteNoiseMap(heightNoise);
+    CompleteNoiseMap(temperatureNoise);
+    CompleteNoiseMap(rainingNoise);
+
+    //Draw
+    DrawNoise(heightNoise, "Height");
+    DrawNoise(temperatureNoise, "Temp");
+    DrawNoise(rainingNoise, "Raining");
+    BiomeBPM();
     
     //Window
     CreateWindow();
@@ -57,9 +75,6 @@ int main()
     //Mesh
     GenerateChunks();
 
-    //Draw
-    DrawNoise(temperatureNoise);
-
     //Texture
     ApplyTexture();
 
@@ -69,6 +84,14 @@ int main()
     glm_perspective(glm_rad(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f, projection);
 
     glfwSetCursorPos(window, 1000 / 2, 1000 / 2);
+
+    // Render
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
     
     // render loop
     // -----------
@@ -82,18 +105,8 @@ int main()
         ProcessMoves(window);
         ProcessMouse(window);
 
-        // Render
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, selectedTexture);
-        glUniform1i(glGetUniformLocation(shaderProgram, "selectedTexture"), 1);
-
         
         //glUniform1i(glGetUniformLocation(shaderProgram, "atlas"), 0);
 
@@ -115,7 +128,7 @@ int main()
 
         //Compile Shader
         CompileShader();
-        
+
         //Uniform vars
         unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE,(const GLfloat *) projection);
@@ -123,6 +136,8 @@ int main()
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE,(const GLfloat *)  model);
         unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE,(const GLfloat *) view);
+        unsigned int blockPatternsUniform = glGetUniformLocation(shaderProgram, "blockPatterns");
+        glUniform1iv(blockPatternsUniform, 42, blockPatterns);
         
         Update();
         
