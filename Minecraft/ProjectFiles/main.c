@@ -49,13 +49,16 @@ int main()
 
     InitBlockPattern(heightNoise);
 
-    InitNoise(heightNoise);
-    InitNoise(temperatureNoise);
-    InitNoise(rainingNoise);
+    //InitNoise(heightNoise);
+    //InitNoise(temperatureNoise);
+    //InitNoise(rainingNoise);
 
     CompleteNoiseMap(heightNoise);
+    exit(0);
     CompleteNoiseMap(temperatureNoise);
     CompleteNoiseMap(rainingNoise);
+
+    exit(0);
 
     //Draw
     DrawNoise(heightNoise, "Height");

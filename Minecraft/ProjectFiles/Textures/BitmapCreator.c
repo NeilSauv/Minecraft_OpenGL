@@ -191,6 +191,8 @@ void BiomeBPM()
     pbitmap->bitmapinfoheader.xpixelpermeter = _xpixelpermeter;
     pbitmap->bitmapinfoheader.numcolorspallette = 0;
 
+    printf("%.06f %.06f\n", temperatureNoise->maxNoiseHeight, temperatureNoise->minNoiseHeight);
+
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;
@@ -198,9 +200,11 @@ void BiomeBPM()
             int temperature = (float)(temperatureNoise->noiseMap[y][x]->height + 1) / 2 * 250;
             int raining = (float)(rainingNoise->noiseMap[y][x]->height + 1) / 2 * 250;
 
-            pixels[p + 0] = biomeAtlas[temperature * 3 * 250 + raining * 3];//blue
+            //printf("%.06f ", temperatureNoise->noiseMap[y][x]->height);
+
+            pixels[p + 0] = biomeAtlas[temperature * 3 * 250 + raining * 3+2];//blue
             pixels[p + 1] = biomeAtlas[temperature * 3 * 250 + raining * 3 + 1];//green
-            pixels[p + 2] = biomeAtlas[temperature * 3 * 250 + raining * 3 + 2];//red   
+            pixels[p + 2] = biomeAtlas[temperature * 3 * 250 + raining * 3];//red   
         }
     }
 

@@ -95,7 +95,6 @@ void CompleteNoiseMap(SimplexNoiseObj* noise)
 		for (int x = 0; x < ChunkView * 2 * ChunkSize; x++)
 		{
 			float height = GetSingleNoiseVal(x, y, block, noise);
-
 			rgbh[y][x]->height = height;
 
 			RGB* rgb = GetBlockColor(block, noise);
@@ -118,14 +117,14 @@ void InitNoiseStruct()
 	heightNoise->colorScheme = malloc(sizeof(ColorScheme));
 	heightNoise->blocks = InitBlockInfoStruct();
 	heightNoise->noiseMap = InitNoiseMap();
-	heightNoise->scale = 200.0f;
+	heightNoise->scale = 10.0f;
 	heightNoise->octaves = 5;
 	heightNoise->persistance = 0.5f;
 	heightNoise->lacunarity = 2.0f;
-	heightNoise->amplitudeVal = 1.7f;
+	heightNoise->amplitudeVal = 1.0f;
 	heightNoise->frequencyVal = 1.0f;
-	heightNoise->maxNoiseHeight = 0.864365f;
-	heightNoise->minNoiseHeight = -0.864366f;
+	heightNoise->maxNoiseHeight = 1.0f;
+	heightNoise->minNoiseHeight = -1.0f;
 
 	// Temperature Noise Init
 	temperatureNoise = malloc(sizeof(SimplexNoiseObj));
@@ -136,12 +135,12 @@ void InitNoiseStruct()
 	temperatureNoise->noiseMap = InitNoiseMap();
 	temperatureNoise->scale = 5.0f;
 	temperatureNoise->octaves = 4;
-	temperatureNoise->persistance = 1.7f;
-	temperatureNoise->lacunarity = 0.5f;
-	temperatureNoise->amplitudeVal = 1.7f;
+	temperatureNoise->persistance = 0.5f;
+	temperatureNoise->lacunarity = 2.0f;
+	temperatureNoise->amplitudeVal = 1.0f;
 	temperatureNoise->frequencyVal = 1.0f;
-	temperatureNoise->maxNoiseHeight = 0.864365f;
-	temperatureNoise->minNoiseHeight = -0.864366f;
+	temperatureNoise->maxNoiseHeight = 1.0f;
+	temperatureNoise->minNoiseHeight = -1.0f;
 
 	// Temperature Noise Init
 	rainingNoise = malloc(sizeof(SimplexNoiseObj));
@@ -152,10 +151,10 @@ void InitNoiseStruct()
 	rainingNoise->noiseMap = InitNoiseMap();
 	rainingNoise->scale = 5.0f;
 	rainingNoise->octaves = 4;
-	rainingNoise->persistance = 1.7f;
-	rainingNoise->lacunarity = 0.5f;
-	rainingNoise->amplitudeVal = 1.7f;
+	rainingNoise->persistance = 0.5f;
+	rainingNoise->lacunarity = 2.0f;
+	rainingNoise->amplitudeVal = 1.0f;
 	rainingNoise->frequencyVal = 1.0f;
-	rainingNoise->maxNoiseHeight = 0.864365f;
-	rainingNoise->minNoiseHeight = -0.864366f;
+	rainingNoise->maxNoiseHeight = 1.0f;
+	rainingNoise->minNoiseHeight = -1.0f;
 }
