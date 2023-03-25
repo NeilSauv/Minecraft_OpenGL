@@ -93,7 +93,7 @@ void CompleteNoiseMap(SimplexNoiseObj* noise)
 	for (int y = 0; y < ChunkView * 2 * ChunkSize; y++)
 	{
 		for (int x = 0; x < ChunkView * 2 * ChunkSize; x++)
-		{
+		{ 
 			float height = GetSingleNoiseVal(x, y, block, noise);
 			rgbh[y][x]->height = height;
 
@@ -102,9 +102,10 @@ void CompleteNoiseMap(SimplexNoiseObj* noise)
 			rgbh[y][x]->red = rgb->red;
 			rgbh[y][x]->green = rgb->green;
 			rgbh[y][x]->blue = rgb->blue;
-
 		}
+
 	}
+
 	free(block);
 }
 

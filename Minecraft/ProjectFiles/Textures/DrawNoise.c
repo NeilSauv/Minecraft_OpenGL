@@ -81,6 +81,10 @@ float GetSingleNoiseVal(int x, int y, BlockInfoStruct* block, SimplexNoiseObj* n
 
     block->height = height;
 
+    //Debug
+    block->blockType = Grass;
+    return height;
+
     GetBlockType(height, noise, block);
     return height;
 }
@@ -111,8 +115,6 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj* noise, BlockInfoStruct** blocks)
                 frequency *= noise->lacunarity;
             }
 
-            printf("%g ", noiseHeight);
-
             map[(raw - y) * ChunkSize + (col - x)] = noiseHeight;
         }
     }
@@ -124,6 +126,12 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj* noise, BlockInfoStruct** blocks)
             BlockInfoStruct* block = malloc(sizeof(BlockInfoStruct));
 
             block->height = height;
+
+
+            //Debug
+            blocks[(raw - y) * ChunkSize + (col - x)] = block;
+            continue;
+
             GetBlockType(height, noise, block);
 
             blocks[(raw - y) * ChunkSize + (col - x)] = block;

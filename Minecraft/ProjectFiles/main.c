@@ -52,13 +52,9 @@ int main()
     //InitNoise(heightNoise);
     //InitNoise(temperatureNoise);
     //InitNoise(rainingNoise);
-
     CompleteNoiseMap(heightNoise);
-    exit(0);
     CompleteNoiseMap(temperatureNoise);
     CompleteNoiseMap(rainingNoise);
-
-    exit(0);
 
     //Draw
     DrawNoise(heightNoise, "Height");

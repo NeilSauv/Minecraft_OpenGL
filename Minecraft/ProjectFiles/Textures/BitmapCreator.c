@@ -191,8 +191,6 @@ void BiomeBPM()
     pbitmap->bitmapinfoheader.xpixelpermeter = _xpixelpermeter;
     pbitmap->bitmapinfoheader.numcolorspallette = 0;
 
-    printf("%.06f %.06f\n", temperatureNoise->maxNoiseHeight, temperatureNoise->minNoiseHeight);
-
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;

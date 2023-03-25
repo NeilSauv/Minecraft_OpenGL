@@ -96,6 +96,7 @@ void FreeColorScheme(ColorScheme* colorScheme)
 
 RGB* GetBlockColor(BlockInfoStruct* block, SimplexNoiseObj* noise)
 {
+	return noise->colorScheme->begin->color;
 	ColorScheme* colorScheme = noise->colorScheme;
 
 	Scheme* scheme = colorScheme->begin;
