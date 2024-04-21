@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stb/stb_image.h>
 
-#include "../Textures/Headers/TextureHeaders.h"
+#include "TextureSet.h"
 
 unsigned int texture1;
 unsigned int selectedTexture;

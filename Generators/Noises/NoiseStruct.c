@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Headers/NoiseStruct.h"
-#include "../../Generators/Noises/Headers/NoisesHeaders.h"
-#include "../../Textures/Headers/TextureHeaders.h"
+#include "NoiseStruct.h"
+
+#include <Textures/DrawNoise.h>
 
 struct SimplexNoiseObj* heightNoise = NULL;
 struct SimplexNoiseObj* temperatureNoise = NULL;

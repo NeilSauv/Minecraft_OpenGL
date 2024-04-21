@@ -1,31 +1,18 @@
 #include <stdio.h>
-#include <stdint.h>
 #include <string.h>
 #include <malloc.h>
 
-#include "../Textures/Headers/TextureHeaders.h"
-#include "../Utils/Headers/UtilsHeaders.h"
-#include "../Generators/Noises/Headers/NoisesHeaders.h"
-#include "../Generators/Chunk/Headers/ChunkHeaders.h"
-#include "Headers/BitmapCreator.h"
+#include "BitmapCreator.h"
 
-#define _height ChunkSize*ChunkView*2
-#define _width  ChunkSize*ChunkView*2
-#define _bitsperpixel 24
-#define _planes 1
-#define _compression 0
-#define _pixelbytesize _height*_width*_bitsperpixel/8
-#define _filesize _pixelbytesize+sizeof(bitmap)
-#define _xpixelpermeter 0x130B //2835 , 72 DPI
-#define _ypixelpermeter 0x130B //2835 , 72 DPI
-#define pixel 0xFF
-#pragma pack(push,1)
+#include <Generators/Noises/SimplexNoise.h>
+#include <Generators/Chunk/BiomeGenerator.h>
+#include "bits/stdint-uintn.h"
 
 void ColorBMP(SimplexNoiseObj* noise, char* name);
 void MonoBMP(SimplexNoiseObj* noise, char* name);
 
 typedef struct {
-    char signature[2];
+    char signature[3];
     uint32_t filesize;
     uint32_t reserved;
     uint32_t fileoffset_to_pixelarray;
@@ -48,7 +35,6 @@ typedef struct {
     fileheader fileheader;
     bitmapinfoheader bitmapinfoheader;
 } bitmap;
-#pragma pack(pop)
 
 char* Concatenate(char* folder, char* fileName, char* extension)
 {

@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Headers/ShaderHeaders.h"
+#include "Shader.h"
 
 unsigned int vertexShader;
 unsigned int fragmentShader;

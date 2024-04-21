@@ -1,12 +1,10 @@
-#include <math.h>
+#include <stdlib.h>
 
-#include "../../Player/Headers/PlayerHeaders.h"
-#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
-#include "../../Utils/Headers/UtilsHeaders.h"
+#include "Region.h"
 
-
-#define RegionCount 4
-#define RegionSize 20
+#include <Player/Destroy.h>
+#include <Generators/Chunk/ChunkGenerator.h>
+#include <Generators/Chunk/ChunkManager.h>
 
 int xOffset = 0;
 int zOffset = 0;

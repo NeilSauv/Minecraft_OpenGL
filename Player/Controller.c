@@ -1,12 +1,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
-#include <stdio.h>
 
-#include "../Player/Headers/PlayerHeaders.h"
-#include "../Utils/Headers/UtilsHeaders.h"
-#include "../Generators/Chunk/Headers/ChunkHeaders.h"
-#include "../Physics/Headers/PhysicsHeaders.h"
+#include "Controller.h"
+
+#include <Utils/FileUtils.h>
+#include <Player/Camera.h>
+#include <Player/Destroy.h>
+#include <Utils/TimeUtils.h>
+#include <Physics/Collisions.h>
 
 vec3 cameraPos = { 0.0f, 100.0f, 0.0f };
 

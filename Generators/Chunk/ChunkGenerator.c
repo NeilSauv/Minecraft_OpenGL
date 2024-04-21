@@ -3,11 +3,10 @@
 #include <cglm/cglm.h>
 #include <stdlib.h>
 
-#include "../../Generators/Noises/Headers/NoisesHeaders.h"
-#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
-#include "../../Player/Headers/PlayerHeaders.h"
-#include "../../Utils/Headers/UtilsHeaders.h"
-#include "../../Textures/Headers/TextureHeaders.h"
+#include "ChunkGenerator.h"
+
+#include <Generators/Noises/NoiseStruct.h>
+#include <Textures/DrawNoise.h>
 
 #define ChunkSize 16
 #define ChunkHeight 256

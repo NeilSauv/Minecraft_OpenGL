@@ -2,11 +2,6 @@
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
 
-#include "../main.h"
-
-#include "../Utils/Headers/UtilsHeaders.h"
-#include "../Player/Headers/PlayerHeaders.h"
-
 vec3 forward = { 0.0f, 0.0f, -1.0f };
 vec3 up = { 0.0f, 1.0f, 0.0f };
 vec3 right = { 1.0, 0.0f, 0.0f };
@@ -14,8 +9,8 @@ vec3 right = { 1.0, 0.0f, 0.0f };
 float yaw = 270.0f;
 float pitch = 0;
 
-float lastX = 1000 / 2;
-float lastY = 1000 / 2;
+float lastX = 1000 / 2.f;
+float lastY = 1000 / 2.f;
 
 void ProcessMouse(GLFWwindow* window)
 {
@@ -52,5 +47,5 @@ void ProcessMouse(GLFWwindow* window)
 
 
     glm_normalize_to(direction, forward);
-    glfwSetCursorPos(window, 1000 / 2, 1000 / 2);
+    glfwSetCursorPos(window, 1000 / 2.f, 1000 / 2.f);
 }

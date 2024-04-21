@@ -1,11 +1,13 @@
 #include <stdio.h>
-#include <math.h>
-#include "Headers/Block.h"
+
+#include "DrawNoise.h"
+
+#include <Textures/Block.h>
 struct SimplexNoiseObj;
-#include "../Textures/Headers/TextureHeaders.h"
-#include "../Utils/Headers/UtilsHeaders.h"
-#include "../Generators/Noises/Headers/NoisesHeaders.h"
-#include "../Generators/Chunk/Headers/ChunkHeaders.h"
+
+#include <Generators/Noises/NoiseStruct.h>
+#include <Generators/Noises/SimplexNoise.h>
+
 #define MaxNoiseValue 0.864366
 #define MinNoiseValue -0.864366
 

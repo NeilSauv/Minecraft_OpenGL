@@ -2,28 +2,25 @@
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
 #include <stdio.h>
-#include "Generators/Noises/Headers/NoiseStruct.h"
 
 #define Debug
 
-#include "main.h"
+#include "Generators/Noises/NoiseStruct.h"
+#include "Generators/Noises/SimplexNoise.h"
+#include "Generators/Chunk/BiomeGenerator.h"
+#include "Textures/BitmapCreator.h"
+#include "Shaders/Shader.h"
+#include "Utils/FileUtils.h"
+#include "Textures/DrawNoise.h"
+#include "Generators/Chunk/Region.h"
+#include "Generators/Chunk/ChunkManager.h"
+#include "Textures/TextureSet.h"
+#include "Utils/TimeUtils.h"
+#include "Player/Controller.h"
+#include "Player/Camera.h"
 
-//Generators
-#include "Generators/Noises/Headers/NoisesHeaders.h"
-#include "Generators/Chunk/Headers/ChunkHeaders.h"
-//Textures
-#include "Textures/Headers/TextureHeaders.h"
-//Shaders
-#include "Shaders/Headers/ShaderHeaders.h"
-//Utils
-#include "Utils/Headers/UtilsHeaders.h"
-//Player
-#include "Player/Headers/PlayerHeaders.h"
-//Physics
-#include "Physics/Headers/PhysicsHeaders.h"
-#include "Generators/Chunk/Headers/BiomeGenerator.h"
-#include "Textures/Headers/BitmapCreator.h"
-#include "Shaders/Headers/Shader.h"
+const unsigned int SCR_WIDTH;
+const unsigned int SCR_HEIGHT;
 
 GLFWwindow* window;
 
@@ -83,7 +80,7 @@ int main()
     mat4 projection = {{0.0, 0.0, 0.0}};
     glm_perspective(glm_rad(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f, projection);
 
-    glfwSetCursorPos(window, SCR_WIDTH / 2, SCR_HEIGHT / 2);
+    glfwSetCursorPos(window, SCR_WIDTH / 2.f, SCR_HEIGHT / 2.f);
 
     // Render
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -122,7 +119,7 @@ int main()
         mat4 model;
         glm_mat4_identity(model);
 
-        glm_perspective(glm_rad(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 10000.0, projection);
+        glm_perspective(glm_rad(45.0f), SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0, projection);
 
         //Compile Shader
         CompileShader();

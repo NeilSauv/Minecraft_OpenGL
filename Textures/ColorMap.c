@@ -1,11 +1,9 @@
-#include "Headers/ColorMap.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../Generators/Noises/Headers/NoisesHeaders.h"
-#include "../Textures/Headers/TextureHeaders.h"
-#include "../Utils/Headers/UtilsHeaders.h"
-#include "Headers/Block.h"
+#include "ColorMap.h"
+
+#include <Generators/Noises/NoiseStruct.c>
 
 void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, int blue, ColorScheme* colorScheme)
 {
@@ -41,39 +39,6 @@ void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, i
     colorScheme->size++;
 }
 
-void AddColorBiome(enum BlockTypeEnum block, float limit, int red, int green, int blue, ColorScheme* colorScheme)
-{
-    struct RGB* color = (struct RGB*)malloc(sizeof(struct RGB));
-    if (!color)
-    {
-        printf("color malloc failed\n");
-        return;
-    }
-
-    color->red = red;
-    color->green = green;
-    color->blue = blue;
-
-    Scheme* scheme = malloc(sizeof(Scheme));
-    if (!scheme)
-    {
-        free(color);
-        printf("scheme malloc failed\n");
-        return;
-    }
-    scheme->limit = limit;
-    scheme->color = color;
-    scheme->block = block;
-    scheme->next = NULL;
-
-    if (!colorScheme->size)
-        colorScheme->begin = scheme;
-    else
-        colorScheme->end->next = scheme;
-
-    colorScheme->end = scheme;
-    colorScheme->size++;
-}
 void InitHeightColorScheme()
 {
     ColorScheme* heightColorScheme = heightNoise->colorScheme;
@@ -97,8 +62,8 @@ void InitHeightColorScheme()
     temperatureColorScheme->size = 0;
     temperatureColorScheme->useBlock = 0;
 
-    AddColorScheme(Sand, 1, 173, 0,0, temperatureColorScheme);
-    AddColorScheme(Sand, 0.7f, 255, 70, 0, temperatureColorScheme);
+    AddColorScheme(Air, 1, 173, 0,0, temperatureColorScheme);
+    AddColorScheme(Air, 0.7f, 255, 70, 0, temperatureColorScheme);
     AddColorScheme(Air, 0.6f, 255, 120, 0, temperatureColorScheme);
     AddColorScheme(Air, 0.5f, 255, 182, 0, temperatureColorScheme);
     AddColorScheme(Air, 0.4f, 246, 250, 209, temperatureColorScheme);
@@ -122,8 +87,6 @@ void InitHeightColorScheme()
     AddColorScheme(Sand, 0.3f, 209, 229, 250, rainingColorScheme);
     AddColorScheme(Sand, 0.2f, 87, 120, 255, rainingColorScheme);
     AddColorScheme(Sand, 0.1f, 34, 0, 119, rainingColorScheme);
-
-
 }
 
 void FreeColorScheme(ColorScheme* colorScheme)

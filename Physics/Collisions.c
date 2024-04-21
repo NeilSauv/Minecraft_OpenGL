@@ -1,10 +1,9 @@
 #include <cglm/cglm.h>
 
-#include "../Generators/Chunk/Headers/ChunkHeaders.h"
-#include "../Generators/Noises/Headers/NoisesHeaders.h"
-#include "../Textures/Headers/TextureHeaders.h"
-#include "../Utils/Headers/UtilsHeaders.h"
-#include "../Physics/Headers/PhysicsHeaders.h"
+#include "Collisions.h"
+
+#include <Generators/Noises/NoiseStruct.h>
+#include <Textures/DrawNoise.h>
 
 bool MovesCollisions(vec3 targetCameraPos)
 {

@@ -1,21 +1,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-#include "../../Generators/Chunk/Headers/ChunkHeaders.h"
-#include "../../Generators/Noises/Headers/NoisesHeaders.h"
-#include "../../Player/Headers/PlayerHeaders.h"
-#include "../../Utils/Headers/UtilsHeaders.h"
-#include "../../Textures/Headers/TextureHeaders.h"
+#include "ChunkManager.h"
+
+#include <Generators/Chunk/ChunkGenerator.h>
+#include <Player/Controller.h>
 
 void DrawChunk();
 int Modulo(int a, int b);
 int ModuloZ(int a, int b, int i);
 int DivideDestroy(int n);
 
-const int chunks = ChunkView* ChunkView * 4;
+const int chunks = ChunkView * ChunkView * 4;
 int count = 0;
 
 int offsetX = 0;
