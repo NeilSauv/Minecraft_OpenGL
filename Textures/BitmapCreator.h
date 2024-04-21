@@ -13,7 +13,6 @@
 #define _xpixelpermeter 0x130B // 2835 , 72 DPI
 #define _ypixelpermeter 0x130B // 2835 , 72 DPI
 #define pixel 0xFF
-// #pragma pack(push,1)
 
 struct SimplexNoiseObj;
 void CreateBMP(struct SimplexNoiseObj *noise, char *name);

@@ -106,7 +106,7 @@ void CompleteNoiseMap(SimplexNoiseObj *noise)
         for (int x = 0; x < ChunkView * 2 * ChunkSize; x++)
         {
             float height = GetSingleNoiseVal(x, y, block, noise);
-            rgbh[y][x]->height = height;
+            rgbh[y][x]->height = height > 1.0f ? 1.0f : height;
 
             RGB *rgb = GetBlockColor(block, noise);
 
@@ -144,7 +144,7 @@ void InitNoiseStruct()
     temperatureNoise->colorScheme = malloc(sizeof(ColorScheme));
     temperatureNoise->blocks = InitBlockInfoStruct();
     temperatureNoise->noiseMap = InitNoiseMap();
-    temperatureNoise->scale = 0.0001f;
+    temperatureNoise->scale = 0.002f;
     temperatureNoise->octaves = 3;
     temperatureNoise->persistance = 0.3f;
     temperatureNoise->lacunarity = 2.5f;
@@ -160,7 +160,7 @@ void InitNoiseStruct()
     rainingNoise->colorScheme = malloc(sizeof(ColorScheme));
     rainingNoise->blocks = InitBlockInfoStruct();
     rainingNoise->noiseMap = InitNoiseMap();
-    rainingNoise->scale = 0.0001f;
+    rainingNoise->scale = 0.002f;
     rainingNoise->octaves = 3;
     rainingNoise->persistance = 0.3f;
     rainingNoise->lacunarity = 2.5f;

@@ -7,19 +7,19 @@
 
 #define Debug
 
-#include "Generators/Chunk/BiomeGenerator.h"
-#include "Generators/Chunk/ChunkManager.h"
-#include "Generators/Chunk/Region.h"
-#include "Generators/Noises/NoiseStruct.h"
-#include "Generators/Noises/SimplexNoise.h"
-#include "Player/Camera.h"
-#include "Player/Controller.h"
-#include "Shaders/Shader.h"
-#include "Textures/BitmapCreator.h"
-#include "Textures/DrawNoise.h"
-#include "Textures/TextureSet.h"
-#include "Utils/FileUtils.h"
-#include "Utils/TimeUtils.h"
+#include <Generators/Chunk/BiomeGenerator.h>
+#include <Generators/Chunk/ChunkManager.h>
+#include <Generators/Chunk/Region.h>
+#include <Generators/Noises/NoiseStruct.h>
+#include <Generators/Noises/SimplexNoise.h>
+#include <Player/Camera.h>
+#include <Player/Controller.h>
+#include <Shaders/Shader.h>
+#include <Textures/BitmapCreator.h>
+#include <Textures/DrawNoise.h>
+#include <Textures/TextureSet.h>
+#include <Utils/FileUtils.h>
+#include <Utils/TimeUtils.h>
 
 const unsigned int SCR_WIDTH;
 const unsigned int SCR_HEIGHT;
@@ -55,9 +55,10 @@ int main()
     CompleteNoiseMap(heightNoise);
     CompleteNoiseMap(temperatureNoise);
     CompleteNoiseMap(rainingNoise);
+    DrawNoise(heightNoise, "Height");
+    BiomeSetup(heightNoise, temperatureNoise, rainingNoise);
 
     // Draw
-    DrawNoise(heightNoise, "Height");
     DrawNoise(temperatureNoise, "Temp");
     DrawNoise(rainingNoise, "Raining");
     BiomeBPM();
@@ -95,7 +96,8 @@ int main()
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-        // Deltatime
+        //      break;
+        //  Deltatime
         UpdateDeltaTime();
 
         // Inputs

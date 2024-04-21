@@ -15,7 +15,6 @@ HEADERS = $(shell find . -type f -name '*.h')
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 
 all: format $(TARGET)
-	./$(TARGET)
 
 $(BUILD_DIR)/%.o: %.c $(HEADERS)
 	@mkdir -p $(@D)

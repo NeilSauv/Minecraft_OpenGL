@@ -7,13 +7,13 @@
 #include <string.h>
 
 #include "bits/stdint-uintn.h"
-
+#pragma pack(push, 1)
 void ColorBMP(SimplexNoiseObj *noise, char *name);
 void MonoBMP(SimplexNoiseObj *noise, char *name);
 
 typedef struct
 {
-    char signature[3];
+    char signature[2];
     uint32_t filesize;
     uint32_t reserved;
     uint32_t fileoffset_to_pixelarray;
@@ -38,7 +38,7 @@ typedef struct
     fileheader fileheader;
     bitmapinfoheader bitmapinfoheader;
 } bitmap;
-
+#pragma pack(pop)
 char *Concatenate(char *folder, char *fileName, char *extension)
 {
     int lenFolder = 0;

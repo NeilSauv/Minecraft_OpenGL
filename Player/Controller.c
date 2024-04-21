@@ -36,7 +36,7 @@ void ProcessMoves(GLFWwindow *window)
 
 void ProcessInput(GLFWwindow *window)
 {
-    const float runSpeed = 50.0f;
+    const float runSpeed = 150.0f;
     const float walkSpeed = 15.0f;
 
     vec3 forwardDir = { forward[0], 0, forward[2] };

@@ -93,29 +93,29 @@ float GetSingleNoiseVal(int x, int y, BlockInfoStruct *block,
 {
     float amplitude = noise->amplitudeVal;
     float frequency = noise->scale;
-    float amplitudeSum = 0;
-    float noiseSum = 0;
+    float noiseHeight = 0;
 
     for (int i = 0; i < noise->octaves; i++)
     {
-        noiseSum +=
-            scaledOpenSimplexNoise2D(noise, x, y, frequency) * amplitude;
-        amplitudeSum += amplitude;
+        float sampleX = (x + 20) * frequency;
+        float sampleY = (y - 40) * frequency;
+
+        float noiseValue =
+            scaledOpenSimplexNoise2D(noise, sampleX, sampleY, frequency);
+
+        noiseHeight += noiseValue * amplitude;
         amplitude *= noise->persistance;
         frequency *= noise->lacunarity;
     }
-    float noiseHeight = noiseSum / amplitudeSum;
 
     float height =
         InvLerp(noise->minNoiseHeight, noise->maxNoiseHeight, noiseHeight);
-
     if (block)
     {
         block->height = height;
         block->blockType = GetBlockType(height, noise, block);
     }
-
-    return height;
+    return height > 1.0f ? 1.0f : height;
 }
 
 void GetNoiseMap(int x, int y, SimplexNoiseObj *noise, BlockInfoStruct **blocks)
@@ -158,7 +158,7 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj *noise, BlockInfoStruct **blocks)
             if (!block)
                 continue;
 
-            block->height = height;
+            block->height = height > 1.0f ? 1.0f : height;
             block->blockType = GetBlockType(height, noise, block);
 
             blocks[(raw - y) * ChunkSize + (col - x)] = block;

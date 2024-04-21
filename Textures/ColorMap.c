@@ -48,10 +48,10 @@ void InitHeightColorScheme()
     heightColorScheme->size = 0;
     heightColorScheme->useBlock = 1;
 
-    AddColorScheme(Snow, 1.0f, 255, 255, 255, heightColorScheme);
-    AddColorScheme(Stone, 0.9f, 163, 163, 163, heightColorScheme);
-    AddColorScheme(Grass, 0.54f, 0, 255, 0, heightColorScheme);
-    AddColorScheme(Sand, 0.2f, 200, 255, 0, heightColorScheme);
+    AddColorScheme(Snow, 0.90f, 255, 255, 255, heightColorScheme);
+    AddColorScheme(Stone, 0.85f, 163, 163, 163, heightColorScheme);
+    AddColorScheme(Grass, 0.55f, 0, 255, 0, heightColorScheme);
+    AddColorScheme(Sand, 0.07f, 200, 255, 0, heightColorScheme);
     AddColorScheme(Water, 0.0f, 0, 0, 255, heightColorScheme);
 
     ColorScheme *temperatureColorScheme = temperatureNoise->colorScheme;
@@ -104,16 +104,19 @@ void FreeColorScheme(ColorScheme *colorScheme)
 RGB *GetBlockColor(BlockInfoStruct *block, SimplexNoiseObj *noise)
 {
     if (!noise || !noise->colorScheme)
+    {
+        printf("nose is NULL / colorScheme is NULL");
         return NULL;
+    }
 
     Scheme *scheme = noise->colorScheme->begin;
-    while (scheme && block->height <= scheme->limit)
-    {
+    while (block->height < scheme->limit && scheme->next)
         scheme = scheme->next;
-    }
 
     if (scheme)
         return scheme->color;
+
+    printf("scheme is NULL with height: %f \n", block->height);
     return NULL;
 }
 

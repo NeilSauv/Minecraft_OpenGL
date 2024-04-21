@@ -11,7 +11,8 @@ bool MovesCollisions(vec3 targetCameraPos)
     int x = round((double)target[0]);
     int z = round((double)target[2]);
 
-    float height = GetSingleNoiseVal(x, z, NULL, heightNoise) * ChunkHeight / 2;
+    float height =
+        GetSingleNoiseVal(x, z, NULL, heightNoise) * ChunkHeight / 2.f;
 
     return target[1] - 2.0f > height; //&& target[1] - 1.0f >= WaterLevel;
 }

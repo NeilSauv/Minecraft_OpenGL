@@ -9,9 +9,6 @@
 #include <cglm/cglm.h>
 #include <stdlib.h>
 
-#define ChunkSize 16
-#define ChunkHeight 256
-
 float translations[ChunkSize * ChunkSize * ChunkHeight][3];
 int rendering[ChunkSize * ChunkSize * ChunkHeight * 4];
 

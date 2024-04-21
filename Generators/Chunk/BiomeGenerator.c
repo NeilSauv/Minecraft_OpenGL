@@ -1,6 +1,5 @@
 #include "BiomeGenerator.h"
 
-#include <Generators/Noises/NoiseStruct.h>
 #include <Textures/BitmapCreator.h>
 #include <Textures/TextureSet.h>
 
