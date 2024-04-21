@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "DrawNoise.h"
 
@@ -6,7 +7,6 @@
 struct SimplexNoiseObj;
 
 #include <Generators/Noises/NoiseStruct.h>
-#include <Generators/Noises/SimplexNoise.h>
 
 #define MaxNoiseValue 0.864366
 #define MinNoiseValue -0.864366
@@ -78,7 +78,9 @@ BlockTypeEnum GetBlockType(float height, SimplexNoiseObj* noise, BlockInfoStruct
         block->pattern = NULL;
         return Grass;
     }
-}float GetSingleNoiseVal(int x, int y, BlockInfoStruct* block, SimplexNoiseObj* noise)
+}
+
+float GetSingleNoiseVal(int x, int y, BlockInfoStruct* block, SimplexNoiseObj* noise)
 {
     float amplitude = noise->amplitudeVal;
     float frequency = noise->scale;

@@ -3,7 +3,7 @@
 
 #include "ColorMap.h"
 
-#include <Generators/Noises/NoiseStruct.c>
+#include <Generators/Noises/NoiseStruct.h>
 
 void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, int blue, ColorScheme* colorScheme)
 {

@@ -14,6 +14,7 @@ OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(@D)
+	@mkdir -p test
 	$(CC) -c $(CFLAGS) $(INCLUDES) $(LIBRARIES) $< -o $@
 
 $(TARGET): $(OBJ)

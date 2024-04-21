@@ -1,5 +1,3 @@
-#include <cglm/cglm.h>
-
 #include "Collisions.h"
 
 #include <Generators/Noises/NoiseStruct.h>

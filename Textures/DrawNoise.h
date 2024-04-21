@@ -1,7 +1,7 @@
 #ifndef DRAW_NOISE
 #define DRAW_NOISE
 
-#include <Generators/Noises/SimplexNoise.c>
+#include <Generators/Noises/SimplexNoise.h>
 
 void DrawNoise(struct SimplexNoiseObj* noise, char* name);
 
