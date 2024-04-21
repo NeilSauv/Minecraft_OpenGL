@@ -1,7 +1,7 @@
 #ifndef CHUNK_MANAGER
 #define CHUNK_MANAGER
 
-#define ChunkView 20
+#include "ChunkGenerator.h"
 
 int Modulo(int a, int b);
 

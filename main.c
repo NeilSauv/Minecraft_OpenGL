@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <cglm/cglm.h>
 #include <stdio.h>
+#include "Generators/Noises/Headers/NoiseStruct.h"
 
 #define Debug
 
@@ -146,7 +147,9 @@ int main()
 
     }
     //Clear
-    FreeColorSchemes();
+    FreeColorSchemes(heightNoise);
+    FreeColorSchemes(temperatureNoise);
+    FreeColorSchemes(rainingNoise);
     ClearChunk();
     ClearTexture();
     ClearShader();
@@ -198,6 +201,8 @@ void CreateWindow()
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    if (!window)
+        return;
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);

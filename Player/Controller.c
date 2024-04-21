@@ -137,6 +137,8 @@ void ProcessInput(GLFWwindow* window)
 
 void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 {
+    if (!window && !mods)
+        return;
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
         DestroyBlock();

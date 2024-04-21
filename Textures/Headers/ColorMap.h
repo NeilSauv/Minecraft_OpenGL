@@ -43,22 +43,30 @@ typedef struct Scheme
     struct Scheme* next;
 }Scheme;
 
-struct ColorScheme
+typedef struct ColorScheme
 {
     int size;
     int useBlock;
     struct Scheme* begin;
     struct Scheme* end;
     struct BlockPattern** patterns;
-};
+}ColorScheme;
 
-typedef struct ColorScheme ColorScheme;
+
+typedef struct ColorBiome
+{
+    int size;
+    int useBlock;
+    struct Scheme* begin;
+    struct Scheme* end;
+    struct BlockPattern** patterns;
+}ColorBiome;
 
 void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, int blue,struct ColorScheme* colorScheme);
 
 void InitHeightColorScheme();
 
-void FreeColorSchemes();
+void FreeColorSchemes(struct SimplexNoiseObj* noise);
 
 RGB* GetBlockColor(struct BlockInfoStruct* block,struct SimplexNoiseObj* noise);
 

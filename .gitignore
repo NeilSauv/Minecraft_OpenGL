@@ -2,4 +2,6 @@
 .cache
 res
 *.json
-main
+Minecraft
+_build
+test

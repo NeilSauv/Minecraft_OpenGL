@@ -10,8 +10,6 @@
 #include "../../Utils/Headers/UtilsHeaders.h"
 #include "../../Textures/Headers/TextureHeaders.h"
 
-#define ChunkView 20
-
 void DrawChunk();
 int Modulo(int a, int b);
 int ModuloZ(int a, int b, int i);

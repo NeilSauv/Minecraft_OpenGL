@@ -92,20 +92,10 @@ void InitBlockPattern(SimplexNoiseObj* noise)
     AddToBlockPattern(Stone, 6, 6, 6, 6, 6, 6, patterns);
     AddToBlockPattern(Water, 7, 7, 7, 7, 7, 7, patterns);
     AddToBlockPattern(Sand, 8, 8, 8, 8, 8, 8, patterns);
-    for (int i = 0; i < 7; i++)
-    {
-        printf("- ");
-        for (int j = 0; j < 6; j++)
-        {
-            printf("%d, ", blockPatterns[i*6 + j]);
-        }
-        printf("\n");
-    }
 }
 
 void CompleteNoiseMap(SimplexNoiseObj* noise)
 {
-
     RGBH*** rgbh = noise->noiseMap;
     BlockInfoStruct* block = malloc(sizeof(BlockInfoStruct));
 
@@ -137,12 +127,12 @@ void InitNoiseStruct()
     heightNoise->colorScheme = malloc(sizeof(ColorScheme));
     heightNoise->blocks = InitBlockInfoStruct();
     heightNoise->noiseMap = InitNoiseMap();
-    heightNoise->scale = 0.003f;
-    heightNoise->octaves = 5;
-    heightNoise->persistance = 0.4f;
+    heightNoise->scale = 0.0002f;
+    heightNoise->octaves = 6;
+    heightNoise->persistance = 0.15f;
     heightNoise->lacunarity = 2.5f;
-    heightNoise->amplitudeVal = 1.0f;
-    heightNoise->frequencyVal = 1.0f;
+    heightNoise->amplitudeVal = 2.0f;
+    heightNoise->frequencyVal = 2.0f;
     heightNoise->maxNoiseHeight = 1.0f;
     heightNoise->minNoiseHeight = -1.0f;
 
@@ -153,9 +143,9 @@ void InitNoiseStruct()
     temperatureNoise->colorScheme = malloc(sizeof(ColorScheme));
     temperatureNoise->blocks = InitBlockInfoStruct();
     temperatureNoise->noiseMap = InitNoiseMap();
-    temperatureNoise->scale = 0.02f;
+    temperatureNoise->scale = 0.0001f;
     temperatureNoise->octaves = 3;
-    temperatureNoise->persistance = 0.4f;
+    temperatureNoise->persistance = 0.3f;
     temperatureNoise->lacunarity = 2.5f;
     temperatureNoise->amplitudeVal = 1.0f;
     temperatureNoise->frequencyVal = 1.0f;
@@ -169,9 +159,9 @@ void InitNoiseStruct()
     rainingNoise->colorScheme = malloc(sizeof(ColorScheme));
     rainingNoise->blocks = InitBlockInfoStruct();
     rainingNoise->noiseMap = InitNoiseMap();
-    rainingNoise->scale = 0.02f;
+    rainingNoise->scale = 0.0001f;
     rainingNoise->octaves = 3;
-    rainingNoise->persistance = 0.4f;
+    rainingNoise->persistance = 0.3f;
     rainingNoise->lacunarity = 2.5f;
     rainingNoise->amplitudeVal = 1.0f;
     rainingNoise->frequencyVal = 1.0f;

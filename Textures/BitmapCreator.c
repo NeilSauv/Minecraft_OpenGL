@@ -128,12 +128,10 @@ void ColorBMP(SimplexNoiseObj* noise, char* name)
     free(pixels);
 }
 
-void MonoBMP(SimplexNoiseObj* noise, char* name)
+void MonoBMP(struct SimplexNoiseObj* noise, char* name)
 {
     char* path = Concatenate("test/", name, "_BW.bmp");
     FILE* fp = fopen(path, "wb");
-
-
 
     bitmap* pbitmap = calloc(1, sizeof(bitmap));
     unsigned char* pixels = malloc(_height * _width * 3);
@@ -155,7 +153,7 @@ void MonoBMP(SimplexNoiseObj* noise, char* name)
     for (int y = 0; y < _height; y++) {
         for (int x = 0; x < _width; x++) {
             int p = (y * _height + x) * 3;
-            int val = (float)(noise->noiseMap[y][x]->height + 1) / 2 * 255;
+            int val = (float)(noise->noiseMap[y][x]->height + 1) / 2.f * 255.f;
             pixels[p + 0] = val;//blue
             pixels[p + 1] = val;//green
             pixels[p + 2] = val;//red   
@@ -199,7 +197,6 @@ void BiomeBPM()
             int temperature = (float)(temperatureNoise->noiseMap[y][x]->height + 1) / 2 * 250;
             int raining = (float)(rainingNoise->noiseMap[y][x]->height + 1) / 2 * 250;
 
-            //printf("%.06f ", temperatureNoise->noiseMap[y][x]->height);
 
             pixels[p + 0] = biomeAtlas[temperature * 3 * 250 + raining * 3+2];//blue
             pixels[p + 1] = biomeAtlas[temperature * 3 * 250 + raining * 3 + 1];//green

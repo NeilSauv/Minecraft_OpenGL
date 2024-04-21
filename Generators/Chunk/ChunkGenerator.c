@@ -148,7 +148,8 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
     //Indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[i]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
+    if (destroyBlock)
+        printf("Destroy\n");
     /*
        if (destroyBlock)
        {
