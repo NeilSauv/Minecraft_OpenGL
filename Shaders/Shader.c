@@ -1,19 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "Shader.h"
+
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
-#include "Shader.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 unsigned int vertexShader;
 unsigned int fragmentShader;
 
 unsigned int shaderProgram;
 
-void ReadShader(const char* vertPath,const char* fragPath)
+void ReadShader(const char *vertPath, const char *fragPath)
 {
-    const char* vertexShaderSource = Read(vertPath);
-    const char* fragmentShaderSource = Read(fragPath);
+    const char *vertexShaderSource = Read(vertPath);
+    const char *fragmentShaderSource = Read(fragPath);
 
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -39,7 +41,6 @@ void ReadShader(const char* vertPath,const char* fragPath)
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         printf("error fragment shader");
         return;
-
     }
     // link shaders
     shaderProgram = glCreateProgram();
@@ -48,7 +49,8 @@ void ReadShader(const char* vertPath,const char* fragPath)
     glLinkProgram(shaderProgram);
     // check for linking errors
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
+    if (!success)
+    {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
         printf("error shader program");
         return;
@@ -56,10 +58,10 @@ void ReadShader(const char* vertPath,const char* fragPath)
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
-char* Read(const char* path)
+char *Read(const char *path)
 {
-    FILE* textfile;
-    char* text;
+    FILE *textfile;
+    char *text;
     long numbytes;
 
     textfile = fopen(path, "r");
@@ -69,12 +71,11 @@ char* Read(const char* path)
         return NULL;
     }
 
-
     fseek(textfile, 0L, SEEK_END);
     numbytes = ftell(textfile);
     fseek(textfile, 0L, SEEK_SET);
 
-    text = (char*)calloc(numbytes, sizeof(char));
+    text = (char *)calloc(numbytes, sizeof(char));
 
     if (!text)
     {

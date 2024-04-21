@@ -1,7 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "List.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 struct IntList
 {
@@ -9,7 +9,7 @@ struct IntList
     int size;
 };
 
-void InitList(struct IntList* list)
+void InitList(struct IntList *list)
 {
     list->size = 0;
 }
@@ -26,12 +26,12 @@ void AddList(struct IntList *list, int element)
     list->size++;
 }
 
-unsigned int GetArray(struct IntList* list)
+unsigned int GetArray(struct IntList *list)
 {
     return list->data[0];
 }
 
-void ClearList(struct IntList* list)
+void ClearList(struct IntList *list)
 {
     free(list->data);
 }

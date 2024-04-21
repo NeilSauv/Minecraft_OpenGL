@@ -1,13 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "ColorMap.h"
 
 #include <Generators/Noises/NoiseStruct.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, int blue, ColorScheme* colorScheme)
+void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green,
+                    int blue, ColorScheme *colorScheme)
 {
-    struct RGB* color = (struct RGB*)malloc(sizeof(struct RGB));
+    struct RGB *color = (struct RGB *)malloc(sizeof(struct RGB));
     if (!color)
     {
         printf("color malloc failed\n");
@@ -18,7 +18,7 @@ void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, i
     color->green = green;
     color->blue = blue;
 
-    Scheme* scheme = malloc(sizeof(Scheme));
+    Scheme *scheme = malloc(sizeof(Scheme));
     if (!scheme)
     {
         free(color);
@@ -41,7 +41,7 @@ void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green, i
 
 void InitHeightColorScheme()
 {
-    ColorScheme* heightColorScheme = heightNoise->colorScheme;
+    ColorScheme *heightColorScheme = heightNoise->colorScheme;
 
     heightColorScheme->begin = NULL;
     heightColorScheme->end = NULL;
@@ -54,15 +54,14 @@ void InitHeightColorScheme()
     AddColorScheme(Sand, 0.2f, 200, 255, 0, heightColorScheme);
     AddColorScheme(Water, 0.0f, 0, 0, 255, heightColorScheme);
 
-
-    ColorScheme* temperatureColorScheme = temperatureNoise->colorScheme;
+    ColorScheme *temperatureColorScheme = temperatureNoise->colorScheme;
 
     temperatureColorScheme->begin = NULL;
     temperatureColorScheme->end = NULL;
     temperatureColorScheme->size = 0;
     temperatureColorScheme->useBlock = 0;
 
-    AddColorScheme(Air, 1, 173, 0,0, temperatureColorScheme);
+    AddColorScheme(Air, 1, 173, 0, 0, temperatureColorScheme);
     AddColorScheme(Air, 0.7f, 255, 70, 0, temperatureColorScheme);
     AddColorScheme(Air, 0.6f, 255, 120, 0, temperatureColorScheme);
     AddColorScheme(Air, 0.5f, 255, 182, 0, temperatureColorScheme);
@@ -71,8 +70,7 @@ void InitHeightColorScheme()
     AddColorScheme(Air, 0.2f, 87, 120, 255, temperatureColorScheme);
     AddColorScheme(Air, 0.1f, 34, 0, 119, temperatureColorScheme);
 
-
-    ColorScheme* rainingColorScheme = rainingNoise->colorScheme;
+    ColorScheme *rainingColorScheme = rainingNoise->colorScheme;
 
     rainingColorScheme->begin = NULL;
     rainingColorScheme->end = NULL;
@@ -89,34 +87,39 @@ void InitHeightColorScheme()
     AddColorScheme(Sand, 0.1f, 34, 0, 119, rainingColorScheme);
 }
 
-void FreeColorScheme(ColorScheme* colorScheme)
+void FreeColorScheme(ColorScheme *colorScheme)
 {
     if (!colorScheme)
         return;
-    Scheme* scheme = colorScheme->begin;
+    Scheme *scheme = colorScheme->begin;
     while (scheme != NULL)
     {
-        Scheme* temp = scheme;
+        Scheme *temp = scheme;
         scheme = temp->next;
         free(temp->color);
         free(temp);
     }
 }
 
-RGB* GetBlockColor(BlockInfoStruct* block, SimplexNoiseObj* noise) {
-    if (!noise || !noise->colorScheme) return NULL;
+RGB *GetBlockColor(BlockInfoStruct *block, SimplexNoiseObj *noise)
+{
+    if (!noise || !noise->colorScheme)
+        return NULL;
 
-    Scheme* scheme = noise->colorScheme->begin;
-    while (scheme && block->height <= scheme->limit) {
+    Scheme *scheme = noise->colorScheme->begin;
+    while (scheme && block->height <= scheme->limit)
+    {
         scheme = scheme->next;
     }
 
-    if (scheme) return scheme->color;
+    if (scheme)
+        return scheme->color;
     return NULL;
 }
 
-void FreeColorSchemes(SimplexNoiseObj* noise)
+void FreeColorSchemes(SimplexNoiseObj *noise)
 {
-    if (!noise) return;
+    if (!noise)
+        return;
     FreeColorScheme(noise->colorScheme);
 }

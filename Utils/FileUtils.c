@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <cglm/cglm.h>
-
 #include "FileUtils.h"
 
-FILE* file;
-char* path = "print.txt";
+#include <cglm/cglm.h>
+#include <stdio.h>
+
+FILE *file;
+char *path = "print.txt";
 
 void OpenFile();
 void CloseFile();
@@ -26,7 +26,7 @@ void WriteLine(char string[])
     fputs(string, file);
 }
 
-void WriteLinei(int i) 
+void WriteLinei(int i)
 {
     fprintf(file, "%d\n", i);
 }
@@ -37,7 +37,7 @@ float WriteLinef(float f)
     return f;
 }
 
-float last[3] = {-0.42, -0.42, -0.42};
+float last[3] = { -0.42, -0.42, -0.42 };
 
 void PrintVec3(vec3 vec)
 {
@@ -66,7 +66,6 @@ void PrintArr3(float arr[])
     vec3 vec = { arr[0], arr[1], arr[2] };
     PrintVec3(vec);
 }
-
 
 void CloseFile()
 {

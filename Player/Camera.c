@@ -1,5 +1,7 @@
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
+
 #include <cglm/cglm.h>
 
 vec3 forward = { 0.0f, 0.0f, -1.0f };
@@ -12,7 +14,7 @@ float pitch = 0;
 float lastX = 1000 / 2.f;
 float lastY = 1000 / 2.f;
 
-void ProcessMouse(GLFWwindow* window)
+void ProcessMouse(GLFWwindow *window)
 {
     double cursorX = 0;
     double cursorY = 0;
@@ -37,14 +39,9 @@ void ProcessMouse(GLFWwindow* window)
     else if (yaw < 0)
         yaw = 360;
 
-    vec3 direction =
-    {
-        cos(glm_rad(yaw)) * cos(glm_rad(pitch)),
-        sin(glm_rad(pitch)),
-        sin(glm_rad(yaw)) * cos(glm_rad(pitch))
-    };
-
-
+    vec3 direction = { cos(glm_rad(yaw)) * cos(glm_rad(pitch)),
+                       sin(glm_rad(pitch)),
+                       sin(glm_rad(yaw)) * cos(glm_rad(pitch)) };
 
     glm_normalize_to(direction, forward);
     glfwSetCursorPos(window, 1000 / 2.f, 1000 / 2.f);

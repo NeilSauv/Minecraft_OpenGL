@@ -6,9 +6,9 @@ extern unsigned int fragmentShader;
 
 extern unsigned int shaderProgram;
 
-void ReadShader(const char* vertPath,const char* fragPath);
+void ReadShader(const char *vertPath, const char *fragPath);
 
-char* Read(const char* path);
+char *Read(const char *path);
 
 void CompileShader();
 

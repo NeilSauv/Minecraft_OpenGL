@@ -12,13 +12,13 @@ typedef enum BlockTypeEnum
     Stone,
     Water,
     Sand
-}BlockTypeEnum;
+} BlockTypeEnum;
 
 struct BlockInfoStruct
 {
     float height;
     enum BlockTypeEnum blockType;
-    struct BlockPattern* pattern;
+    struct BlockPattern *pattern;
 };
 
 typedef struct BlockInfoStruct BlockInfoStruct;

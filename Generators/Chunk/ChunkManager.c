@@ -1,7 +1,8 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include "ChunkManager.h"
+
+#include <glad/glad.h>
+
+#include <GLFW/glfw3.h>
 
 #include <Generators/Chunk/ChunkGenerator.h>
 #include <Player/Controller.h>
@@ -19,19 +20,20 @@ int offsetZ = 0;
 
 void GenerateChunks()
 {
-    glGenVertexArrays(chunks,(GLuint *) &VAO); //Generate vertex array
+    glGenVertexArrays(chunks, (GLuint *)&VAO); // Generate vertex array
 
-    glGenBuffers(chunks,(GLuint *) &VBO); //Generate buffer
-    glGenBuffers(chunks,(GLuint *) &EBO);
-    glGenBuffers(chunks,(GLuint *) &faceVBO);
-    glGenBuffers(chunks,(GLuint *) &instanceVBO);
-    glGenBuffers(chunks,(GLuint *) &renderVBO);
+    glGenBuffers(chunks, (GLuint *)&VBO); // Generate buffer
+    glGenBuffers(chunks, (GLuint *)&EBO);
+    glGenBuffers(chunks, (GLuint *)&faceVBO);
+    glGenBuffers(chunks, (GLuint *)&instanceVBO);
+    glGenBuffers(chunks, (GLuint *)&renderVBO);
 
     for (int x = -ChunkView; x < ChunkView; x += 1)
     {
         for (int z = -ChunkView; z < ChunkView; z += 1)
         {
-            CreateChunk(x*ChunkSize, -ChunkHeight / 2, z * ChunkSize, count, false);
+            CreateChunk(x * ChunkSize, -ChunkHeight / 2, z * ChunkSize, count,
+                        false);
             count++;
         }
     }
@@ -52,43 +54,48 @@ void Update()
 
     int ChunkLength = ChunkView * 2;
 
-    //X Axis
-    if (cameraPos[0] > (offsetX+1) * ChunkSize)
+    // X Axis
+    if (cameraPos[0] > (offsetX + 1) * ChunkSize)
     {
         offsetX++;
         addAxisX = -1;
         xUpdate = true;
     }
-    else if(cameraPos[0] < (offsetX-1) * ChunkSize)
+    else if (cameraPos[0] < (offsetX - 1) * ChunkSize)
     {
         offsetX--;
         addAxisX = 0;
         xUpdate = true;
     }
     // Z Axis
-    if (cameraPos[2] < (offsetZ -1) * ChunkSize)
+    if (cameraPos[2] < (offsetZ - 1) * ChunkSize)
     {
         offsetZ--;
         zUpdate = true;
         addAxisZ = 0;
     }
-    if (cameraPos[2] > (offsetZ+ 1) * ChunkSize)
+    if (cameraPos[2] > (offsetZ + 1) * ChunkSize)
     {
         offsetZ++;
         zUpdate = true;
         addAxisZ = -1;
     }
-    
+
     if (xUpdate)
     {
-
         xUpdate = false;
         for (int i = -ChunkView; i < ChunkView; i++)
         {
             int index = i + ChunkView;
             int sign = (addAxisX * (-2) - 1);
             int xOffset = offsetX + addAxisX;
-            CreateChunk((float)(sign * ChunkView + xOffset) * ChunkSize, (float) - ChunkHeight / 2, (float)(i + offsetZ) * ChunkSize, Modulo(Modulo(index + offsetZ, ChunkLength) + ChunkLength * xOffset, count), false);
+            CreateChunk((float)(sign * ChunkView + xOffset) * ChunkSize,
+                        (float)-ChunkHeight / 2,
+                        (float)(i + offsetZ) * ChunkSize,
+                        Modulo(Modulo(index + offsetZ, ChunkLength)
+                                   + ChunkLength * xOffset,
+                               count),
+                        false);
         }
     }
 
@@ -100,15 +107,19 @@ void Update()
             int index = i + ChunkView;
             int sign = (addAxisZ * (-2) - 1);
             int zOffset = offsetZ + addAxisZ;
-            CreateChunk((float)(i+offsetX) * ChunkSize, (float) - ChunkHeight / 2, (float)(sign * ChunkView + zOffset) * ChunkSize, ModuloZ(Modulo(index + offsetX, ChunkLength) * ChunkLength + zOffset, ChunkLength, Modulo(index + offsetX, ChunkLength)), false);
+            CreateChunk(
+                (float)(i + offsetX) * ChunkSize, (float)-ChunkHeight / 2,
+                (float)(sign * ChunkView + zOffset) * ChunkSize,
+                ModuloZ(Modulo(index + offsetX, ChunkLength) * ChunkLength
+                            + zOffset,
+                        ChunkLength, Modulo(index + offsetX, ChunkLength)),
+                false);
         }
     }
-
 }
 
 void UpdateDestroyed(int chunkIndex)
 {
-
     int i = 0;
     for (int x = -ChunkView; x < ChunkView; x += 1)
     {
@@ -118,7 +129,9 @@ void UpdateDestroyed(int chunkIndex)
             {
                 offsetX = 0;
                 offsetZ = 0;
-                CreateChunk((float)(x + offsetX) * ChunkSize, (float) - ChunkHeight / 2, (float)(z + offsetZ) * ChunkSize, i, true);
+                CreateChunk((float)(x + offsetX) * ChunkSize,
+                            (float)-ChunkHeight / 2,
+                            (float)(z + offsetZ) * ChunkSize, i, true);
             }
             i++;
         }
@@ -129,33 +142,31 @@ int DivideDestroy(int n)
 {
     if (n < 0)
         return -(n / ChunkSize) - ChunkSize;
-    
+
     return n / ChunkSize;
 }
 
 int Modulo(int a, int b)
 {
     int r = a % b;
-    return r < 0 ? r+b : r;
+    return r < 0 ? r + b : r;
 }
 
 int ModuloZ(int a, int b, int i)
 {
     int r = a - i * b;
     r %= b;
-    return r < 0 ? r+b + i*b : r + i * b;
+    return r < 0 ? r + b + i * b : r + i * b;
 }
-
 
 void ClearChunk()
 {
-    glDeleteVertexArrays(count,(GLuint *) &VAO);
+    glDeleteVertexArrays(count, (GLuint *)&VAO);
 
-
-    glDeleteBuffers(count,(GLuint *) &VBO);
-    glDeleteBuffers(count,(GLuint *) &EBO);
-    glDeleteBuffers(count,(GLuint *) &VAO);
-    glDeleteBuffers(count,(GLuint *) &faceVBO);
-    glDeleteBuffers(count,(GLuint *) &instanceVBO);
-    glDeleteBuffers(count,(GLuint *) &renderVBO);
+    glDeleteBuffers(count, (GLuint *)&VBO);
+    glDeleteBuffers(count, (GLuint *)&EBO);
+    glDeleteBuffers(count, (GLuint *)&VAO);
+    glDeleteBuffers(count, (GLuint *)&faceVBO);
+    glDeleteBuffers(count, (GLuint *)&instanceVBO);
+    glDeleteBuffers(count, (GLuint *)&renderVBO);
 }

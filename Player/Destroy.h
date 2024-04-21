@@ -1,12 +1,11 @@
 #ifndef DESTROY
 #define DESTROY
 
-
 typedef struct DestroyList
 {
     int data;
-    struct DestroyList* next;
-}DestroyList;
+    struct DestroyList *next;
+} DestroyList;
 
 /*
    struct chunkList
@@ -16,14 +15,14 @@ typedef struct DestroyList
    struct chunkList* nextChunk;
 };*/
 
-extern struct DestroyList* list;
+extern struct DestroyList *list;
 
 extern int size;
 
-void Add(struct DestroyList* list, int element);
+void Add(struct DestroyList *list, int element);
 
 void DestroyBlock();
 
-int GetList(struct DestroyList* list, int n);
+int GetList(struct DestroyList *list, int n);
 
 #endif // !DESTROY

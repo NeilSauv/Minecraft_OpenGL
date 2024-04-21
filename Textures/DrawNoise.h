@@ -3,14 +3,14 @@
 
 #include <Generators/Noises/SimplexNoise.h>
 
-void DrawNoise(struct SimplexNoiseObj* noise, char* name);
+void DrawNoise(struct SimplexNoiseObj *noise, char *name);
 
-void InitNoise(struct SimplexNoiseObj* noise);
+void InitNoise(struct SimplexNoiseObj *noise);
 
-void GetNoiseMap(int x, int y,struct SimplexNoiseObj* noise, struct BlockInfoStruct** blocks);
+void GetNoiseMap(int x, int y, struct SimplexNoiseObj *noise,
+                 struct BlockInfoStruct **blocks);
 
-float GetSingleNoiseVal(int x, int y, struct BlockInfoStruct* block, struct SimplexNoiseObj* noise);
-
+float GetSingleNoiseVal(int x, int y, struct BlockInfoStruct *block,
+                        struct SimplexNoiseObj *noise);
 
 #endif // !DRAW_NOISE
-

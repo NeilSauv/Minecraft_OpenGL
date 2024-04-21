@@ -1,28 +1,28 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "NoiseStruct.h"
 
 #include <Textures/DrawNoise.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-struct SimplexNoiseObj* heightNoise = NULL;
-struct SimplexNoiseObj* temperatureNoise = NULL;
-struct SimplexNoiseObj* rainingNoise = NULL;
+struct SimplexNoiseObj *heightNoise = NULL;
+struct SimplexNoiseObj *temperatureNoise = NULL;
+struct SimplexNoiseObj *rainingNoise = NULL;
 int blockPatterns[42];
 
-struct RGBH*** InitNoiseMap()
+struct RGBH ***InitNoiseMap()
 {
-    struct RGBH*** noiseMap = malloc(sizeof(struct RGBH*) * ChunkView * 2 * ChunkSize);
+    struct RGBH ***noiseMap =
+        malloc(sizeof(struct RGBH *) * ChunkView * 2 * ChunkSize);
     if (!noiseMap)
         printf("noiseMap is NULL");
 
     for (int y = 0; y < ChunkView * 2 * ChunkSize; y++)
     {
-        noiseMap[y] = malloc(sizeof(RGBH*) * ChunkView * 2 * ChunkSize);
+        noiseMap[y] = malloc(sizeof(RGBH *) * ChunkView * 2 * ChunkSize);
 
         for (int x = 0; x < ChunkView * 2 * ChunkSize; x++)
         {
-            RGBH* rgbh = malloc(sizeof(RGBH));
+            RGBH *rgbh = malloc(sizeof(RGBH));
             rgbh->height = 0;
             rgbh->red = 0;
             rgbh->green = 0;
@@ -35,19 +35,20 @@ struct RGBH*** InitNoiseMap()
     return noiseMap;
 }
 
-BlockInfoStruct*** InitBlockInfoStruct()
+BlockInfoStruct ***InitBlockInfoStruct()
 {
-    BlockInfoStruct*** blocks = calloc(ChunkView*ChunkView*2, sizeof(BlockInfoStruct**));
+    BlockInfoStruct ***blocks =
+        calloc(ChunkView * ChunkView * 2, sizeof(BlockInfoStruct **));
     if (!blocks)
         printf("blocks is NULL");
 
     for (int i = 0; i < ChunkView * ChunkView * 2; i++)
     {
-        blocks[i] = calloc(ChunkSize * ChunkSize, sizeof(BlockInfoStruct*));
+        blocks[i] = calloc(ChunkSize * ChunkSize, sizeof(BlockInfoStruct *));
 
         for (int j = 0; j < ChunkSize * ChunkSize; j++)
         {
-            struct BlockInfoStruct* block = malloc(sizeof(BlockInfoStruct));
+            struct BlockInfoStruct *block = malloc(sizeof(BlockInfoStruct));
             block->blockType = Air;
             block->height = 0;
 
@@ -58,9 +59,10 @@ BlockInfoStruct*** InitBlockInfoStruct()
     return blocks;
 }
 
-void AddToBlockPattern(BlockTypeEnum block, int top, int bottom, int side1, int side2, int side3, int side4, BlockPattern** patterns)
+void AddToBlockPattern(BlockTypeEnum block, int top, int bottom, int side1,
+                       int side2, int side3, int side4, BlockPattern **patterns)
 {
-    BlockPattern* pattern = malloc(sizeof(BlockPattern));
+    BlockPattern *pattern = malloc(sizeof(BlockPattern));
     pattern->topFace = top;
     pattern->bottomFace = bottom;
     pattern->sideOne = side1;
@@ -78,12 +80,12 @@ void AddToBlockPattern(BlockTypeEnum block, int top, int bottom, int side1, int 
     blockPatterns[block * 6 + 5] = bottom;
 }
 
-void InitBlockPattern(SimplexNoiseObj* noise)
+void InitBlockPattern(SimplexNoiseObj *noise)
 {
-    ColorScheme* colorScheme = noise->colorScheme;
+    ColorScheme *colorScheme = noise->colorScheme;
     int size = colorScheme->size;
 
-    BlockPattern** patterns = malloc(sizeof(BlockPattern*) * size);
+    BlockPattern **patterns = malloc(sizeof(BlockPattern *) * size);
     colorScheme->patterns = patterns;
 
     AddToBlockPattern(Grass, 0, 2, 1, 1, 1, 1, patterns);
@@ -94,25 +96,24 @@ void InitBlockPattern(SimplexNoiseObj* noise)
     AddToBlockPattern(Sand, 8, 8, 8, 8, 8, 8, patterns);
 }
 
-void CompleteNoiseMap(SimplexNoiseObj* noise)
+void CompleteNoiseMap(SimplexNoiseObj *noise)
 {
-    RGBH*** rgbh = noise->noiseMap;
-    BlockInfoStruct* block = malloc(sizeof(BlockInfoStruct));
+    RGBH ***rgbh = noise->noiseMap;
+    BlockInfoStruct *block = malloc(sizeof(BlockInfoStruct));
 
     for (int y = 0; y < ChunkView * 2 * ChunkSize; y++)
     {
         for (int x = 0; x < ChunkView * 2 * ChunkSize; x++)
-        { 
+        {
             float height = GetSingleNoiseVal(x, y, block, noise);
             rgbh[y][x]->height = height;
 
-            RGB* rgb = GetBlockColor(block, noise);
+            RGB *rgb = GetBlockColor(block, noise);
 
             rgbh[y][x]->red = rgb->red;
             rgbh[y][x]->green = rgb->green;
             rgbh[y][x]->blue = rgb->blue;
         }
-
     }
 
     free(block);

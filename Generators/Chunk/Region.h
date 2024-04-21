@@ -10,10 +10,10 @@ struct regionList
 {
     int x;
     int z;
-    struct DestroyList* destroyList[RegionSize * RegionSize];
+    struct DestroyList *destroyList[RegionSize * RegionSize];
 };
 
-extern struct regionList* regions[RegionCount][RegionCount];
+extern struct regionList *regions[RegionCount][RegionCount];
 
 int GetRegion(int pos);
 

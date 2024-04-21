@@ -1,14 +1,11 @@
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <cglm/cglm.h>
-
 #include "Controller.h"
 
-#include <Utils/FileUtils.h>
+#include <Physics/Collisions.h>
 #include <Player/Camera.h>
 #include <Player/Destroy.h>
+#include <Utils/FileUtils.h>
 #include <Utils/TimeUtils.h>
-#include <Physics/Collisions.h>
+#include <cglm/cglm.h>
 
 vec3 cameraPos = { 0.0f, 100.0f, 0.0f };
 
@@ -25,24 +22,24 @@ float actualFailSpeed = 1.5f;
 
 float speed = 2.5f;
 
-void ProcessInput(GLFWwindow* window);
+void ProcessInput(GLFWwindow *window);
 void Falling(vec3 cameraPos);
 
 bool godMod = true;
 
-void ProcessMoves(GLFWwindow* window)
+void ProcessMoves(GLFWwindow *window)
 {
     ProcessInput(window);
-    if(!godMod)
+    if (!godMod)
         Falling(cameraPos);
 }
 
-void ProcessInput(GLFWwindow* window)
+void ProcessInput(GLFWwindow *window)
 {
     const float runSpeed = 50.0f;
     const float walkSpeed = 15.0f;
 
-    vec3 forwardDir = { forward[0], 0, forward[2]};
+    vec3 forwardDir = { forward[0], 0, forward[2] };
     vec3 targetCameraPos = { 0.0, 0.0, 0.0 };
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -52,7 +49,6 @@ void ProcessInput(GLFWwindow* window)
     vec3 cameraSpeed;
     glm_vec3_scale(iddentity, speed * deltaTime, cameraSpeed);
     vec3 temp = { 0.0, 0.0, 0.0 };
-
 
     if (jumped)
     {
@@ -77,7 +73,8 @@ void ProcessInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
         godMod = !godMod;
 
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && ((groundCheck && !jumped) || godMod))
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS
+        && ((groundCheck && !jumped) || godMod))
     {
         if (!godMod && groundCheck && !jumped)
         {
@@ -87,11 +84,11 @@ void ProcessInput(GLFWwindow* window)
             jumped = true;
             groundCheck = false;
         }
-        else if(godMod)
+        else if (godMod)
             glm_vec3_muladd(cameraSpeed, up, targetCameraPos);
-
     }
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) //&& groundCheck //&& !jumped)
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)
+        == GLFW_PRESS) //&& groundCheck //&& !jumped)
     {
         glm_vec2_negate_to(up, temp);
         glm_vec3_muladd(cameraSpeed, temp, targetCameraPos);
@@ -133,11 +130,11 @@ void ProcessInput(GLFWwindow* window)
 
     glm_vec3_add(cameraPos, targetCameraPos, targetCameraPos);
 
-    if(MovesCollisions(targetCameraPos))
+    if (MovesCollisions(targetCameraPos))
         glm_vec3_scale(targetCameraPos, 1, cameraPos);
 }
 
-void mouse_callback(GLFWwindow* window, int button, int action, int mods)
+void mouse_callback(GLFWwindow *window, int button, int action, int mods)
 {
     if (!window && !mods)
         return;
@@ -149,12 +146,10 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 
 void Falling(vec3 cameraPos)
 {
-
-
     int x = round(cameraPos[0]);
     int z = round(cameraPos[2]);
 
-    vec3 target = { x,cameraPos[1]-0.01, z };
+    vec3 target = { x, cameraPos[1] - 0.01, z };
     if (MovesCollisions(target) && !jumped)
     {
         vec3 temp = { 0.0, 0.0, 0.0 };
@@ -169,5 +164,4 @@ void Falling(vec3 cameraPos)
         groundCheck = true;
         actualFailSpeed = failSpeed;
     }
-
 }

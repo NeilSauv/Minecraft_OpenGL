@@ -8,15 +8,15 @@ typedef enum NoiseNameEnum
     TERRAIN,
     BIOME_TEMP,
     BIOME_HUM
-}NoiseNameEnum;
+} NoiseNameEnum;
 
 typedef struct SimplexNoiseObj
 {
     enum NoiseNameEnum name;
-    struct osn_context* ctx;
-    struct ColorScheme* colorScheme;
-    struct BlockInfoStruct*** blocks;
-    struct RGBH*** noiseMap;
+    struct osn_context *ctx;
+    struct ColorScheme *colorScheme;
+    struct BlockInfoStruct ***blocks;
+    struct RGBH ***noiseMap;
     float scale;
     int octaves;
     float persistance;
@@ -25,20 +25,20 @@ typedef struct SimplexNoiseObj
     float frequencyVal;
     float maxNoiseHeight;
     float minNoiseHeight;
-}SimplexNoiseObj;
+} SimplexNoiseObj;
 
-extern struct SimplexNoiseObj* heightNoise;
-extern struct SimplexNoiseObj* temperatureNoise;
-extern struct SimplexNoiseObj* rainingNoise;
+extern struct SimplexNoiseObj *heightNoise;
+extern struct SimplexNoiseObj *temperatureNoise;
+extern struct SimplexNoiseObj *rainingNoise;
 
 extern int blockPatterns[42];
 
 void InitNoiseStruct();
 
-void CompleteNoiseMap(struct SimplexNoiseObj* noise);
+void CompleteNoiseMap(struct SimplexNoiseObj *noise);
 
-void InitBlockPattern(struct SimplexNoiseObj* noise);
+void InitBlockPattern(struct SimplexNoiseObj *noise);
 
-struct RGBH*** InitNoiseMap();
+struct RGBH ***InitNoiseMap();
 
 #endif

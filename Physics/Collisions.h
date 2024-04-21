@@ -3,6 +3,6 @@
 
 #include <cglm/cglm.h>
 
-extern  bool MovesCollisions(vec3 targetCameraPos);
+extern bool MovesCollisions(vec3 targetCameraPos);
 
 #endif
