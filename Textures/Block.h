@@ -1,7 +1,7 @@
 #ifndef BLOCK
 #define BLOCK
 
-#define WaterLevel 64
+#define WaterLevel 0
 
 typedef enum BlockTypeEnum
 {

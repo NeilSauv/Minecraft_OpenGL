@@ -34,10 +34,7 @@ const unsigned int SCR_HEIGHT = 1080;
 
 int main()
 {
-#ifdef Debug
-    OpenFile(); // Open print.txt for debbuging output
-#endif
-
+    OpenFile();
     InitNoiseStruct();
     open_simplex_noise(200, heightNoise);
     open_simplex_noise(201, rainingNoise);
@@ -49,9 +46,6 @@ int main()
 
     InitBlockPattern(heightNoise);
 
-    InitNoise(heightNoise);
-    InitNoise(temperatureNoise);
-    InitNoise(rainingNoise);
     CompleteNoiseMap(heightNoise);
     CompleteNoiseMap(temperatureNoise);
     CompleteNoiseMap(rainingNoise);
@@ -62,7 +56,6 @@ int main()
     DrawNoise(temperatureNoise, "Temp");
     DrawNoise(rainingNoise, "Raining");
     BiomeBPM();
-
     // Window
     CreateWindow();
 
@@ -152,6 +145,8 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    CloseFile();
     // Clear
     FreeColorSchemes(heightNoise);
     FreeColorSchemes(temperatureNoise);
@@ -163,10 +158,6 @@ int main()
     glfwTerminate();
 
     FreeStruct();
-
-#ifdef Debug
-    CloseFile();
-#endif
 
     return 0;
 }

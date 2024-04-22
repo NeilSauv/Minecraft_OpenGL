@@ -9,6 +9,8 @@
 #include <cglm/cglm.h>
 #include <stdlib.h>
 
+#include "Utils/FileUtils.h"
+
 float translations[ChunkSize * ChunkSize * ChunkHeight][3];
 int rendering[ChunkSize * ChunkSize * ChunkHeight * 4];
 
@@ -243,8 +245,7 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
     {
         for (int z = 0; z < ChunkSize; z++)
         {
-            int height =
-                blocks[z * ChunkSize + x]->height * (ChunkHeight / 2.f);
+            int height = blocks[z * ChunkSize + x]->height * ChunkHeight;
             bool blockNotFound = true;
             // bool waterNotFound = true;
 
@@ -259,7 +260,7 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
                     if (y + yAxis == WaterLevel)
                     {
                         block = Water;
-                        blockNotFound = false;
+                        // blockNotFound = false;
                     }
                     else if (y + yAxis == height)
                     {

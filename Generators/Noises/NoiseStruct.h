@@ -21,8 +21,7 @@ typedef struct SimplexNoiseObj
     int octaves;
     float persistance;
     float lacunarity;
-    float amplitudeVal;
-    float frequencyVal;
+    float amplitude;
     float maxNoiseHeight;
     float minNoiseHeight;
 } SimplexNoiseObj;

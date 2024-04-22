@@ -43,12 +43,13 @@ void PrintVec3(vec3 vec)
 {
     if (last[0] != vec[0] || last[1] != vec[1] || last[2] != vec[2])
     {
-        glm_vec3_print(vec, file);
+        fprintf(file, "Vec3(%.2f, %.2f, %.2f)\n", vec[0], vec[1], vec[2]);
     }
 
     last[0] = vec[0];
     last[1] = vec[1];
     last[2] = vec[2];
+    fflush(file);
 }
 
 void PrintVec4(vec4 vec)

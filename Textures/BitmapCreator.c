@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Generators/Noises/NoiseStruct.h"
 #include "bits/stdint-uintn.h"
 #pragma pack(push, 1)
 void ColorBMP(SimplexNoiseObj *noise, char *name);
@@ -147,7 +148,9 @@ void MonoBMP(struct SimplexNoiseObj *noise, char *name)
         for (int x = 0; x < _width; x++)
         {
             int p = (y * _height + x) * 3;
-            int val = (float)(noise->noiseMap[y][x]->height + 1) / 2.f * 255.f;
+            int val =
+                (float)(noise->noiseMap[y][x]->height - noise->minNoiseHeight)
+                / (noise->maxNoiseHeight - noise->minNoiseHeight) * 255.f;
             pixels[p + 0] = val; // blue
             pixels[p + 1] = val; // green
             pixels[p + 2] = val; // red
@@ -190,10 +193,15 @@ void BiomeBPM()
         {
             int p = (y * _height + x) * 3;
 
-            int temperature =
-                (float)(temperatureNoise->noiseMap[y][x]->height + 1) / 2 * 250;
-            int raining =
-                (float)(rainingNoise->noiseMap[y][x]->height + 1) / 2 * 250;
+            int temperature = (float)(temperatureNoise->noiseMap[y][x]->height
+                                      - temperatureNoise->minNoiseHeight)
+                / (temperatureNoise->maxNoiseHeight
+                   - temperatureNoise->minNoiseHeight)
+                * 250;
+            int raining = (float)(rainingNoise->noiseMap[y][x]->height
+                                  - rainingNoise->minNoiseHeight)
+                / (rainingNoise->maxNoiseHeight - rainingNoise->minNoiseHeight)
+                * 250;
 
             pixels[p + 0] =
                 biomeAtlas[temperature * 3 * 250 + raining * 3 + 2]; // blue

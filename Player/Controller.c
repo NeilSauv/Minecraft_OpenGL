@@ -7,6 +7,8 @@
 #include <Utils/TimeUtils.h>
 #include <cglm/cglm.h>
 
+#include "GLFW/glfw3.h"
+
 vec3 cameraPos = { 0.0f, 100.0f, 0.0f };
 
 bool groundCheck = false;
@@ -123,7 +125,7 @@ void ProcessInput(GLFWwindow *window)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
-    if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
     {
         PrintVec3(cameraPos);
     }
@@ -149,7 +151,7 @@ void Falling(vec3 cameraPos)
     int x = round(cameraPos[0]);
     int z = round(cameraPos[2]);
 
-    vec3 target = { x, cameraPos[1] - 0.01, z };
+    vec3 target = { x, cameraPos[1] + 0.01, z };
     if (MovesCollisions(target) && !jumped)
     {
         vec3 temp = { 0.0, 0.0, 0.0 };

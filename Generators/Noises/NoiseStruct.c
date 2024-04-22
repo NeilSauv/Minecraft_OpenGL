@@ -105,9 +105,7 @@ void CompleteNoiseMap(SimplexNoiseObj *noise)
     {
         for (int x = 0; x < ChunkView * 2 * ChunkSize; x++)
         {
-            float height = GetSingleNoiseVal(x, y, block, noise);
-            rgbh[y][x]->height = height > 1.0f ? 1.0f : height;
-
+            rgbh[y][x]->height = GetSingleNoiseVal(x, y, block, noise);
             RGB *rgb = GetBlockColor(block, noise);
 
             rgbh[y][x]->red = rgb->red;
@@ -128,44 +126,41 @@ void InitNoiseStruct()
     heightNoise->colorScheme = malloc(sizeof(ColorScheme));
     heightNoise->blocks = InitBlockInfoStruct();
     heightNoise->noiseMap = InitNoiseMap();
-    heightNoise->scale = 0.0002f;
-    heightNoise->octaves = 6;
-    heightNoise->persistance = 0.15f;
+    heightNoise->scale = 0.04f;
+    heightNoise->octaves = 5;
+    heightNoise->persistance = 0.2f;
     heightNoise->lacunarity = 2.5f;
-    heightNoise->amplitudeVal = 2.0f;
-    heightNoise->frequencyVal = 2.0f;
+    heightNoise->amplitude = 1.0f;
     heightNoise->maxNoiseHeight = 1.0f;
-    heightNoise->minNoiseHeight = -1.0f;
+    heightNoise->minNoiseHeight = 0.0f;
 
     // Temperature Noise Init
     temperatureNoise = malloc(sizeof(SimplexNoiseObj));
-    temperatureNoise->name = TERRAIN;
-    heightNoise->ctx = NULL;
+    temperatureNoise->name = BIOME_TEMP;
+    temperatureNoise->ctx = NULL;
     temperatureNoise->colorScheme = malloc(sizeof(ColorScheme));
     temperatureNoise->blocks = InitBlockInfoStruct();
     temperatureNoise->noiseMap = InitNoiseMap();
-    temperatureNoise->scale = 0.002f;
-    temperatureNoise->octaves = 3;
-    temperatureNoise->persistance = 0.3f;
-    temperatureNoise->lacunarity = 2.5f;
-    temperatureNoise->amplitudeVal = 1.0f;
-    temperatureNoise->frequencyVal = 1.0f;
+    temperatureNoise->scale = 0.0045f;
+    temperatureNoise->octaves = 6;
+    temperatureNoise->persistance = 0.25f;
+    temperatureNoise->lacunarity = 2.3f;
+    temperatureNoise->amplitude = 1.0f;
     temperatureNoise->maxNoiseHeight = 1.0f;
     temperatureNoise->minNoiseHeight = -1.0f;
 
     // Temperature Noise Init
     rainingNoise = malloc(sizeof(SimplexNoiseObj));
-    rainingNoise->name = TERRAIN;
-    heightNoise->ctx = NULL;
+    rainingNoise->name = BIOME_HUM;
+    rainingNoise->ctx = NULL;
     rainingNoise->colorScheme = malloc(sizeof(ColorScheme));
     rainingNoise->blocks = InitBlockInfoStruct();
     rainingNoise->noiseMap = InitNoiseMap();
     rainingNoise->scale = 0.002f;
-    rainingNoise->octaves = 3;
-    rainingNoise->persistance = 0.3f;
+    rainingNoise->octaves = 6;
+    rainingNoise->persistance = 0.2f;
     rainingNoise->lacunarity = 2.5f;
-    rainingNoise->amplitudeVal = 1.0f;
-    rainingNoise->frequencyVal = 1.0f;
+    rainingNoise->amplitude = 1.0f;
     rainingNoise->maxNoiseHeight = 1.0f;
     rainingNoise->minNoiseHeight = -1.0f;
 }

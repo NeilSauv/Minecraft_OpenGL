@@ -5,8 +5,6 @@
 
 void DrawNoise(struct SimplexNoiseObj *noise, char *name);
 
-void InitNoise(struct SimplexNoiseObj *noise);
-
 void GetNoiseMap(int x, int y, struct SimplexNoiseObj *noise,
                  struct BlockInfoStruct **blocks);
 

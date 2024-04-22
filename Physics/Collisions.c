@@ -3,6 +3,8 @@
 #include <Generators/Noises/NoiseStruct.h>
 #include <Textures/DrawNoise.h>
 
+#include "Generators/Chunk/ChunkGenerator.h"
+
 bool MovesCollisions(vec3 targetCameraPos)
 {
     vec3 target = { targetCameraPos[0], targetCameraPos[1],
@@ -11,8 +13,7 @@ bool MovesCollisions(vec3 targetCameraPos)
     int x = round((double)target[0]);
     int z = round((double)target[2]);
 
-    float height =
-        GetSingleNoiseVal(x, z, NULL, heightNoise) * ChunkHeight / 2.f;
+    float height = GetSingleNoiseVal(x, z, NULL, heightNoise) * ChunkHeight;
 
-    return target[1] - 2.0f > height; //&& target[1] - 1.0f >= WaterLevel;
+    return target[1] - 2.0f >= height && target[1] - 1.0f >= WaterLevel;
 }
