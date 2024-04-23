@@ -5,7 +5,7 @@
 
 #define ChunkSize 16
 #define ChunkHeight 256
-#define ChunkView 30
+#define ChunkView 15
 
 extern unsigned int indices[];
 extern float texCoords[];

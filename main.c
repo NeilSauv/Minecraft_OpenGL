@@ -84,7 +84,8 @@ int main()
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture1);
-
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -92,6 +93,16 @@ int main()
         //      break;
         //  Deltatime
         UpdateDeltaTime();
+        double currentTime = glfwGetTime();
+        nbFrames++;
+        if (currentTime - lastTime >= 1.0)
+        { // Si un seconde est passée
+          // Afficher les frames par seconde
+            printf("%.2f FPS\n", nbFrames / (currentTime - lastTime));
+
+            nbFrames = 0;
+            lastTime = currentTime;
+        }
 
         // Inputs
         ProcessMoves(window);

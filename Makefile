@@ -16,6 +16,9 @@ OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 
 all: format $(TARGET)
 
+run: all
+	./$(TARGET)
+
 $(BUILD_DIR)/%.o: %.c $(HEADERS)
 	@mkdir -p $(@D)
 	@mkdir -p $(IMAGE_DIR)

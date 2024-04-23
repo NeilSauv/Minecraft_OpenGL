@@ -9,10 +9,10 @@
 #include <cglm/cglm.h>
 #include <stdlib.h>
 
-#include "Utils/FileUtils.h"
+#include "Textures/Block.h"
 
 float translations[ChunkSize * ChunkSize * ChunkHeight][3];
-int rendering[ChunkSize * ChunkSize * ChunkHeight * 4];
+int rendering[ChunkSize * ChunkSize * ChunkHeight * 4] = { 0 };
 
 unsigned int VBO[ChunkView * ChunkView * 4];
 unsigned int VAO[ChunkView * ChunkView * 4];
@@ -240,42 +240,24 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
     GetNoiseMap(xAxis, zAxis, heightNoise, blocks);
 
     int renderCount = 0;
+    if (yAxis)
+        return;
 
     for (int x = 0; x < ChunkSize; x++)
     {
         for (int z = 0; z < ChunkSize; z++)
         {
             int height = blocks[z * ChunkSize + x]->height * ChunkHeight;
-            bool blockNotFound = true;
-            // bool waterNotFound = true;
 
-            for (int y = ChunkHeight; y > 0 && blockNotFound; y--)
-            {
-                // int index = (x * ChunkSize + z) * ChunkHeight + y;
+            int highest = height > WaterLevel ? height : WaterLevel;
+            BlockTypeEnum block = blocks[z * ChunkSize + x]->blockType;
+            block = highest == height ? block : Water;
+            translations[renderCount][0] = x + xAxis;
+            translations[renderCount][1] = height > Water ? height : Water;
+            translations[renderCount][2] = z + zAxis;
 
-                if (y + yAxis == height || y + yAxis == WaterLevel)
-                {
-                    BlockTypeEnum block = blocks[z * ChunkSize + x]->blockType;
-
-                    if (y + yAxis == WaterLevel)
-                    {
-                        block = Water;
-                        // blockNotFound = false;
-                    }
-                    else if (y + yAxis == height)
-                    {
-                        blockNotFound = false;
-                    }
-
-                    translations[renderCount][0] = x + xAxis;
-                    translations[renderCount][1] = y + yAxis;
-                    translations[renderCount][2] = z + zAxis;
-
-                    rendering[(renderCount) * 4] = block;
-
-                    renderCount++;
-                }
-            }
+            rendering[renderCount * 4] = block;
+            renderCount++;
         }
     }
     glBindBuffer(GL_ARRAY_BUFFER, faceVBO[i]);

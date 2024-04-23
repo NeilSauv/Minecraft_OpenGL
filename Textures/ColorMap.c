@@ -48,11 +48,12 @@ void InitHeightColorScheme()
     heightColorScheme->size = 0;
     heightColorScheme->useBlock = 1;
 
-    AddColorScheme(Snow, 0.90f, 255, 255, 255, heightColorScheme);
-    AddColorScheme(Stone, 0.85f, 163, 163, 163, heightColorScheme);
-    AddColorScheme(Grass, 0.55f, 0, 255, 0, heightColorScheme);
-    AddColorScheme(Sand, 0.07f, 200, 255, 0, heightColorScheme);
-    AddColorScheme(Water, 0.0f, 0, 0, 255, heightColorScheme);
+    AddColorScheme(Snow, 0.85f, 255, 255, 255, heightColorScheme);
+    AddColorScheme(Stone, 0.80f, 163, 163, 163, heightColorScheme);
+    AddColorScheme(Grass, 0.03f, 0, 255, 0, heightColorScheme);
+    AddColorScheme(Sand, 0.00f, 200, 255, 0, heightColorScheme);
+    AddColorScheme(Water, heightNoise->minNoiseHeight, 0, 0, 255,
+                   heightColorScheme);
 
     ColorScheme *temperatureColorScheme = temperatureNoise->colorScheme;
 

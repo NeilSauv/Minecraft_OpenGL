@@ -126,13 +126,13 @@ void InitNoiseStruct()
     heightNoise->colorScheme = malloc(sizeof(ColorScheme));
     heightNoise->blocks = InitBlockInfoStruct();
     heightNoise->noiseMap = InitNoiseMap();
-    heightNoise->scale = 0.04f;
+    heightNoise->scale = 0.03f;
     heightNoise->octaves = 5;
     heightNoise->persistance = 0.2f;
     heightNoise->lacunarity = 2.5f;
     heightNoise->amplitude = 1.0f;
     heightNoise->maxNoiseHeight = 1.0f;
-    heightNoise->minNoiseHeight = 0.0f;
+    heightNoise->minNoiseHeight = -0.7f;
 
     // Temperature Noise Init
     temperatureNoise = malloc(sizeof(SimplexNoiseObj));
@@ -141,7 +141,7 @@ void InitNoiseStruct()
     temperatureNoise->colorScheme = malloc(sizeof(ColorScheme));
     temperatureNoise->blocks = InitBlockInfoStruct();
     temperatureNoise->noiseMap = InitNoiseMap();
-    temperatureNoise->scale = 0.0045f;
+    temperatureNoise->scale = 0.0045f * 20;
     temperatureNoise->octaves = 6;
     temperatureNoise->persistance = 0.25f;
     temperatureNoise->lacunarity = 2.3f;
@@ -156,7 +156,7 @@ void InitNoiseStruct()
     rainingNoise->colorScheme = malloc(sizeof(ColorScheme));
     rainingNoise->blocks = InitBlockInfoStruct();
     rainingNoise->noiseMap = InitNoiseMap();
-    rainingNoise->scale = 0.002f;
+    rainingNoise->scale = 0.002f * 20;
     rainingNoise->octaves = 6;
     rainingNoise->persistance = 0.2f;
     rainingNoise->lacunarity = 2.5f;

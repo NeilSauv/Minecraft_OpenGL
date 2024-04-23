@@ -32,8 +32,7 @@ void GenerateChunks()
     {
         for (int z = -ChunkView; z < ChunkView; z += 1)
         {
-            CreateChunk(x * ChunkSize, -ChunkHeight / 2, z * ChunkSize, count,
-                        false);
+            CreateChunk(x * ChunkSize, 0, z * ChunkSize, count, false);
             count++;
         }
     }
@@ -89,8 +88,7 @@ void Update()
             int index = i + ChunkView;
             int sign = (addAxisX * (-2) - 1);
             int xOffset = offsetX + addAxisX;
-            CreateChunk((float)(sign * ChunkView + xOffset) * ChunkSize,
-                        (float)-ChunkHeight / 2,
+            CreateChunk((float)(sign * ChunkView + xOffset) * ChunkSize, 0,
                         (float)(i + offsetZ) * ChunkSize,
                         Modulo(Modulo(index + offsetZ, ChunkLength)
                                    + ChunkLength * xOffset,
@@ -108,7 +106,7 @@ void Update()
             int sign = (addAxisZ * (-2) - 1);
             int zOffset = offsetZ + addAxisZ;
             CreateChunk(
-                (float)(i + offsetX) * ChunkSize, (float)-ChunkHeight / 2,
+                (float)(i + offsetX) * ChunkSize, 0,
                 (float)(sign * ChunkView + zOffset) * ChunkSize,
                 ModuloZ(Modulo(index + offsetX, ChunkLength) * ChunkLength
                             + zOffset,
@@ -129,8 +127,7 @@ void UpdateDestroyed(int chunkIndex)
             {
                 offsetX = 0;
                 offsetZ = 0;
-                CreateChunk((float)(x + offsetX) * ChunkSize,
-                            (float)-ChunkHeight / 2,
+                CreateChunk((float)(x + offsetX) * ChunkSize, 0,
                             (float)(z + offsetZ) * ChunkSize, i, true);
             }
             i++;

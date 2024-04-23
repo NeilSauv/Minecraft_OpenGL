@@ -3,7 +3,7 @@
 #include <cglm/cglm.h>
 #include <stdio.h>
 
-FILE *file;
+FILE *file = NULL;
 char *path = "print.txt";
 
 void OpenFile();

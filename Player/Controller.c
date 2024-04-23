@@ -8,6 +8,7 @@
 #include <cglm/cglm.h>
 
 #include "GLFW/glfw3.h"
+#include "cglm/types.h"
 
 vec3 cameraPos = { 0.0f, 100.0f, 0.0f };
 
@@ -18,11 +19,11 @@ bool jumped = false;
 float jumpHeight = 0.0f;
 float jumpIncrease = 10.0f;
 
-float failSpeed = 1.3f;
-float increaseFail = 10.0f;
-float actualFailSpeed = 1.5f;
+float failSpeed = 0;
+float increaseFail = 9.8f;
+float actualFailSpeed = 0;
 
-float speed = 2.5f;
+float speed = 4.16f;
 
 void ProcessInput(GLFWwindow *window);
 void Falling(vec3 cameraPos);
@@ -38,8 +39,9 @@ void ProcessMoves(GLFWwindow *window)
 
 void ProcessInput(GLFWwindow *window)
 {
-    const float runSpeed = 150.0f;
-    const float walkSpeed = 15.0f;
+    const float runSpeed = 7.127f;
+    const float walkSpeed = 4.16f;
+    const float godSpeed = 150.f;
 
     vec3 forwardDir = { forward[0], 0, forward[2] };
     vec3 targetCameraPos = { 0.0, 0.0, 0.0 };
@@ -68,7 +70,7 @@ void ProcessInput(GLFWwindow *window)
     }
 
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        speed = runSpeed;
+        speed = godMod ? godSpeed : runSpeed;
     else
         speed = walkSpeed;
 
@@ -130,10 +132,20 @@ void ProcessInput(GLFWwindow *window)
         PrintVec3(cameraPos);
     }
 
+    if (!targetCameraPos[0] && !targetCameraPos[1] && !targetCameraPos[2])
+        return;
     glm_vec3_add(cameraPos, targetCameraPos, targetCameraPos);
 
-    if (MovesCollisions(targetCameraPos))
-        glm_vec3_scale(targetCameraPos, 1, cameraPos);
+    vec3 tmp1 = { targetCameraPos[0], cameraPos[1], cameraPos[2] };
+    vec3 tmp2 = { cameraPos[0], targetCameraPos[1], cameraPos[2] };
+    vec3 tmp3 = { cameraPos[0], cameraPos[1], targetCameraPos[2] };
+
+    if (MovesCollisions(tmp1))
+        cameraPos[0] = targetCameraPos[0];
+    if (MovesCollisions(tmp2))
+        cameraPos[1] = targetCameraPos[1];
+    if (MovesCollisions(tmp3))
+        cameraPos[2] = targetCameraPos[2];
 }
 
 void mouse_callback(GLFWwindow *window, int button, int action, int mods)
@@ -141,17 +153,13 @@ void mouse_callback(GLFWwindow *window, int button, int action, int mods)
     if (!window && !mods)
         return;
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-    {
         DestroyBlock();
-    }
 }
 
 void Falling(vec3 cameraPos)
 {
-    int x = round(cameraPos[0]);
-    int z = round(cameraPos[2]);
-
-    vec3 target = { x, cameraPos[1] + 0.01, z };
+    vec3 target = { cameraPos[0], cameraPos[1] - actualFailSpeed * deltaTime,
+                    cameraPos[2] };
     if (MovesCollisions(target) && !jumped)
     {
         vec3 temp = { 0.0, 0.0, 0.0 };

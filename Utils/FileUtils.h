@@ -21,4 +21,6 @@ void PrintArr3(float arr[]);
 
 void CloseFile();
 
+extern FILE* file;
+
 #endif // !FILE_UTILS

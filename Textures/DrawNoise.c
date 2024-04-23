@@ -17,7 +17,8 @@ float InvLerp(float a, float b, float v);
 void InitNoise(SimplexNoiseObj *noise);
 float scaledOpenSimplexNoise2D(SimplexNoiseObj *noise, float x, float y,
                                float scale);
-
+float scaleRange(float value, float fromLow, float fromHigh, float toLow,
+                 float toHigh);
 unsigned char *pixels;
 
 BlockTypeEnum GetBlockType(float height, SimplexNoiseObj *noise,
@@ -72,14 +73,14 @@ BlockTypeEnum GetBlockType(float height, SimplexNoiseObj *noise,
 float GetSingleNoiseVal(int x, int y, BlockInfoStruct *block,
                         SimplexNoiseObj *noise)
 {
-    float amplitude = 1.0f;
+    float amplitude = noise->amplitude;
     float scale = noise->scale;
     float noiseHeight = 0;
 
     for (int i = 0; i < noise->octaves; i++)
     {
-        float sampleX = (x + 20) * scale;
-        float sampleY = (y - 40) * scale;
+        float sampleX = x * scale;
+        float sampleY = y * scale;
 
         float noiseValue =
             scaledOpenSimplexNoise2D(noise, sampleX, sampleY, scale);
@@ -89,14 +90,16 @@ float GetSingleNoiseVal(int x, int y, BlockInfoStruct *block,
         scale *= noise->lacunarity;
     }
 
-    float height = noiseHeight;
-    // InvLerp(noise->minNoiseHeight, noise->maxNoiseHeight, noiseHeight);
+    float height = scaleRange(noiseHeight, -1, 1, noise->minNoiseHeight,
+                              noise->maxNoiseHeight);
+    height = fmaxf(fminf(height, noise->maxNoiseHeight), noise->minNoiseHeight);
+
     if (block)
     {
         block->height = height;
         block->blockType = GetBlockType(height, noise, block);
     }
-    return fmaxf(fminf(height, noise->maxNoiseHeight), noise->minNoiseHeight);
+    return height;
 }
 
 void GetNoiseMap(int x, int y, SimplexNoiseObj *noise, BlockInfoStruct **blocks)
@@ -112,14 +115,14 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj *noise, BlockInfoStruct **blocks)
     {
         for (int col = x; col < ChunkSize + x; col++)
         {
-            float amplitude = 1.0f;
+            float amplitude = noise->amplitude;
             float scale = noise->scale;
             float noiseHeight = 0;
 
             for (int i = 0; i < noise->octaves; i++)
             {
-                float sampleX = (col + 20) * scale;
-                float sampleY = (raw - 40) * scale;
+                float sampleX = col * scale;
+                float sampleY = raw * scale;
 
                 float noiseValue =
                     scaledOpenSimplexNoise2D(noise, sampleX, sampleY, scale);
@@ -138,8 +141,8 @@ void GetNoiseMap(int x, int y, SimplexNoiseObj *noise, BlockInfoStruct **blocks)
         for (int col = x; col < ChunkSize + x; col++)
         {
             float height = map[(raw - y) * ChunkSize + (col - x)];
-            // InvLerp(noise->minNoiseHeight, noise->maxNoiseHeight, map[(raw -
-            // y) * ChunkSize + (col - x)]);
+            height = scaleRange(height, -1, 1, noise->minNoiseHeight,
+                                noise->maxNoiseHeight);
             height = fmaxf(fminf(height, noise->maxNoiseHeight),
                            noise->minNoiseHeight);
 
