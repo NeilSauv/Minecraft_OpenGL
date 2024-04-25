@@ -1,5 +1,6 @@
 #include "Ray.h"
 
+#include <Generators/Chunk/ChunkGenerator.h>
 #include <Generators/Chunk/Region.h>
 #include <Generators/Noises/NoiseStruct.h>
 #include <Textures/DrawNoise.h>

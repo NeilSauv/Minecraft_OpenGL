@@ -6,7 +6,6 @@ struct SimplexNoiseObj;
 #include <Textures/BitmapCreator.h>
 #include <Textures/Block.h>
 
-enum BlockTypeEnum;
 struct RGB
 {
     unsigned int red;

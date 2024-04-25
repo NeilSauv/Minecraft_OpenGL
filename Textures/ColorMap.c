@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "Textures/Block.h"
+#include "Textures/BlockDef.h"
+
 void AddColorScheme(enum BlockTypeEnum block, float limit, int red, int green,
                     int blue, ColorScheme *colorScheme)
 {
@@ -48,11 +51,11 @@ void InitHeightColorScheme()
     heightColorScheme->size = 0;
     heightColorScheme->useBlock = 1;
 
-    AddColorScheme(Snow, 0.85f, 255, 255, 255, heightColorScheme);
-    AddColorScheme(Stone, 0.80f, 163, 163, 163, heightColorScheme);
-    AddColorScheme(Grass, 0.03f, 0, 255, 0, heightColorScheme);
-    AddColorScheme(Sand, 0.00f, 200, 255, 0, heightColorScheme);
-    AddColorScheme(Water, heightNoise->minNoiseHeight, 0, 0, 255,
+    AddColorScheme(BLOCK_SNOW, 0.85f, 255, 255, 255, heightColorScheme);
+    AddColorScheme(BLOCK_STONE, 0.80f, 163, 163, 163, heightColorScheme);
+    AddColorScheme(BLOCK_GRASS_BLOCK, 0.03f, 0, 255, 0, heightColorScheme);
+    AddColorScheme(BLOCK_SAND, 0.00f, 200, 255, 0, heightColorScheme);
+    AddColorScheme(BLOCK_WATER_FLOW, heightNoise->minNoiseHeight, 0, 0, 255,
                    heightColorScheme);
 
     ColorScheme *temperatureColorScheme = temperatureNoise->colorScheme;
@@ -62,14 +65,14 @@ void InitHeightColorScheme()
     temperatureColorScheme->size = 0;
     temperatureColorScheme->useBlock = 0;
 
-    AddColorScheme(Air, 1, 173, 0, 0, temperatureColorScheme);
-    AddColorScheme(Air, 0.7f, 255, 70, 0, temperatureColorScheme);
-    AddColorScheme(Air, 0.6f, 255, 120, 0, temperatureColorScheme);
-    AddColorScheme(Air, 0.5f, 255, 182, 0, temperatureColorScheme);
-    AddColorScheme(Air, 0.4f, 246, 250, 209, temperatureColorScheme);
-    AddColorScheme(Air, 0.3f, 209, 229, 250, temperatureColorScheme);
-    AddColorScheme(Air, 0.2f, 87, 120, 255, temperatureColorScheme);
-    AddColorScheme(Air, 0.1f, 34, 0, 119, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 1, 173, 0, 0, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.7f, 255, 70, 0, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.6f, 255, 120, 0, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.5f, 255, 182, 0, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.4f, 246, 250, 209, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.3f, 209, 229, 250, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.2f, 87, 120, 255, temperatureColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.1f, 34, 0, 119, temperatureColorScheme);
 
     ColorScheme *rainingColorScheme = rainingNoise->colorScheme;
 
@@ -78,14 +81,14 @@ void InitHeightColorScheme()
     rainingColorScheme->size = 0;
     rainingColorScheme->useBlock = 0;
 
-    AddColorScheme(Air, 1, 173, 0, 0, rainingColorScheme);
-    AddColorScheme(Air, 0.7f, 255, 70, 0, rainingColorScheme);
-    AddColorScheme(Air, 0.6f, 255, 120, 0, rainingColorScheme);
-    AddColorScheme(Air, 0.5f, 255, 182, 0, rainingColorScheme);
-    AddColorScheme(Air, 0.4f, 246, 250, 209, rainingColorScheme);
-    AddColorScheme(Sand, 0.3f, 209, 229, 250, rainingColorScheme);
-    AddColorScheme(Sand, 0.2f, 87, 120, 255, rainingColorScheme);
-    AddColorScheme(Sand, 0.1f, 34, 0, 119, rainingColorScheme);
+    AddColorScheme(BLOCK_AIR, 1, 173, 0, 0, rainingColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.7f, 255, 70, 0, rainingColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.6f, 255, 120, 0, rainingColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.5f, 255, 182, 0, rainingColorScheme);
+    AddColorScheme(BLOCK_AIR, 0.4f, 246, 250, 209, rainingColorScheme);
+    AddColorScheme(BLOCK_SAND, 0.3f, 209, 229, 250, rainingColorScheme);
+    AddColorScheme(BLOCK_SAND, 0.2f, 87, 120, 255, rainingColorScheme);
+    AddColorScheme(BLOCK_SAND, 0.1f, 34, 0, 119, rainingColorScheme);
 }
 
 void FreeColorScheme(ColorScheme *colorScheme)
@@ -102,7 +105,7 @@ void FreeColorScheme(ColorScheme *colorScheme)
     }
 }
 
-RGB *GetBlockColor(BlockInfoStruct *block, SimplexNoiseObj *noise)
+RGB *GetBlockColor(struct BlockInfoStruct *block, SimplexNoiseObj *noise)
 {
     if (!noise || !noise->colorScheme)
     {

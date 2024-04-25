@@ -1,8 +1,12 @@
 #include "NoiseStruct.h"
 
+#include <Generators/Chunk/ChunkGenerator.h>
 #include <Textures/DrawNoise.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "Textures/BlockDef.h"
+#include "Textures/ColorMap.h"
 
 struct SimplexNoiseObj *heightNoise = NULL;
 struct SimplexNoiseObj *temperatureNoise = NULL;
@@ -49,7 +53,7 @@ BlockInfoStruct ***InitBlockInfoStruct()
         for (int j = 0; j < ChunkSize * ChunkSize; j++)
         {
             struct BlockInfoStruct *block = malloc(sizeof(BlockInfoStruct));
-            block->blockType = Air;
+            block->blockType = BLOCK_AIR;
             block->height = 0;
 
             blocks[i][j] = block;
@@ -57,43 +61,6 @@ BlockInfoStruct ***InitBlockInfoStruct()
     }
 
     return blocks;
-}
-
-void AddToBlockPattern(BlockTypeEnum block, int top, int bottom, int side1,
-                       int side2, int side3, int side4, BlockPattern **patterns)
-{
-    BlockPattern *pattern = malloc(sizeof(BlockPattern));
-    pattern->topFace = top;
-    pattern->bottomFace = bottom;
-    pattern->sideOne = side1;
-    pattern->sideTwo = side2;
-    pattern->sideThree = side3;
-    pattern->sideFour = side4;
-
-    patterns[block] = pattern;
-
-    blockPatterns[block * 6 + 0] = top;
-    blockPatterns[block * 6 + 1] = side1;
-    blockPatterns[block * 6 + 2] = side2;
-    blockPatterns[block * 6 + 3] = side3;
-    blockPatterns[block * 6 + 4] = side4;
-    blockPatterns[block * 6 + 5] = bottom;
-}
-
-void InitBlockPattern(SimplexNoiseObj *noise)
-{
-    ColorScheme *colorScheme = noise->colorScheme;
-    int size = colorScheme->size;
-
-    BlockPattern **patterns = malloc(sizeof(BlockPattern *) * size);
-    colorScheme->patterns = patterns;
-
-    AddToBlockPattern(Grass, 0, 2, 1, 1, 1, 1, patterns);
-    AddToBlockPattern(Snow, 3, 5, 4, 4, 4, 4, patterns);
-    AddToBlockPattern(Dirt, 2, 2, 2, 2, 2, 2, patterns);
-    AddToBlockPattern(Stone, 6, 6, 6, 6, 6, 6, patterns);
-    AddToBlockPattern(Water, 7, 7, 7, 7, 7, 7, patterns);
-    AddToBlockPattern(Sand, 8, 8, 8, 8, 8, 8, patterns);
 }
 
 void CompleteNoiseMap(SimplexNoiseObj *noise)

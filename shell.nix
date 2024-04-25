@@ -8,7 +8,7 @@ pkgs.mkShell {
     pkgs.libGL
     pkgs.pkg-config
     pkgs.cglm
-    # Add any other dependencies your project may need
+    pkgs.python3.pkgs.pillow
   ];
 
 }

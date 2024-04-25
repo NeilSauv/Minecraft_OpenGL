@@ -1,8 +1,6 @@
 #ifndef NOISE_STRUCT
 #define NOISE_STRUCT
 
-#include <Textures/ColorMap.h>
-
 typedef enum NoiseNameEnum
 {
     TERRAIN,

@@ -1,11 +1,12 @@
 #include "Collisions.h"
 
+#include <Generators/Chunk/ChunkGenerator.h>
 #include <Generators/Noises/NoiseStruct.h>
+#include <Player/Controller.h>
+#include <Textures/BlockDef.h>
+#include <Textures/DrawNoise.h>
 #include <stdio.h>
 
-#include "Generators/Chunk/ChunkGenerator.h"
-#include "Player/Controller.h"
-#include "Textures/DrawNoise.h"
 static int AddAbsolute(float val, float add, int camPos)
 {
     float center = 0.5f;

@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #include "Textures/Block.h"
+#include "Textures/BlockDef.h"
 
 float translations[ChunkSize * ChunkSize * ChunkHeight][3];
 int rendering[ChunkSize * ChunkSize * ChunkHeight * 4] = { 0 };
@@ -251,9 +252,10 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
 
             int highest = height > WaterLevel ? height : WaterLevel;
             BlockTypeEnum block = blocks[z * ChunkSize + x]->blockType;
-            block = highest == height ? block : Water;
+            block = highest == height ? block : BLOCK_WATER_FLOW;
             translations[renderCount][0] = x + xAxis;
-            translations[renderCount][1] = height > Water ? height : Water;
+            translations[renderCount][1] =
+                height > BLOCK_WATER_FLOW ? height : BLOCK_WATER_FLOW;
             translations[renderCount][2] = z + zAxis;
 
             rendering[renderCount * 4] = block;

@@ -41,21 +41,23 @@ void BiomeSetup(struct SimplexNoiseObj *heightNoise,
     if (!biome_scheme)
         return;
 
-    InitBiomeScheme(biome_scheme, ICE, Air, 180, 220, 220);
-    InitBiomeScheme(biome_scheme, SNOWY_TUNDRA, Air, 255, 255, 255);
-    InitBiomeScheme(biome_scheme, SNOWY_TAIGA, Air, 49, 85, 74);
-    InitBiomeScheme(biome_scheme, GIANT_TREE_TAIGA, Air, 89, 102, 81);
-    InitBiomeScheme(biome_scheme, TAIGA, Air, 11, 102, 89);
-    InitBiomeScheme(biome_scheme, FOREST, Air, 5, 102, 33);
-    InitBiomeScheme(biome_scheme, PLAINS, Air, 141, 179, 96);
-    InitBiomeScheme(biome_scheme, SAKURA, Air, 255, 0, 236);
-    InitBiomeScheme(biome_scheme, SUNFLOWER_PLAINS, Air, 118, 219, 136);
-    InitBiomeScheme(biome_scheme, FLOWER_FOREST, Air, 45, 172, 73);
-    InitBiomeScheme(biome_scheme, BIRCH_FOREST, Air, 48, 116, 68);
-    InitBiomeScheme(biome_scheme, DARK_FOREST, Air, 104, 121, 66);
-    InitBiomeScheme(biome_scheme, JUNGLE, Air, 82, 123, 9);
-    InitBiomeScheme(biome_scheme, SAVANA, Air, 189, 178, 95);
-    InitBiomeScheme(biome_scheme, DESERT, Air, 250, 148, 24);
+    InitBiomeScheme(biome_scheme, BIOME_ICE, BLOCK_AIR, 180, 220, 220);
+    InitBiomeScheme(biome_scheme, BIOME_SNOWY_TUNDRA, BLOCK_AIR, 255, 255, 255);
+    InitBiomeScheme(biome_scheme, BIOME_SNOWY_TAIGA, BLOCK_AIR, 49, 85, 74);
+    InitBiomeScheme(biome_scheme, BIOME_GIANT_TREE_TAIGA, BLOCK_AIR, 89, 102,
+                    81);
+    InitBiomeScheme(biome_scheme, BIOME_TAIGA, BLOCK_AIR, 11, 102, 89);
+    InitBiomeScheme(biome_scheme, BIOME_FOREST, BLOCK_AIR, 5, 102, 33);
+    InitBiomeScheme(biome_scheme, BIOME_PLAINS, BLOCK_AIR, 141, 179, 96);
+    InitBiomeScheme(biome_scheme, BIOME_SAKURA, BLOCK_AIR, 255, 0, 236);
+    InitBiomeScheme(biome_scheme, BIOME_SUNFLOWER_PLAINS, BLOCK_AIR, 118, 219,
+                    136);
+    InitBiomeScheme(biome_scheme, BIOME_FLOWER_FOREST, BLOCK_AIR, 45, 172, 73);
+    InitBiomeScheme(biome_scheme, BIOME_BIRCH_FOREST, BLOCK_AIR, 48, 116, 68);
+    InitBiomeScheme(biome_scheme, BIOME_DARK_FOREST, BLOCK_AIR, 104, 121, 66);
+    InitBiomeScheme(biome_scheme, BIOME_JUNGLE, BLOCK_AIR, 82, 123, 9);
+    InitBiomeScheme(biome_scheme, BIOME_SAVANA, BLOCK_AIR, 189, 178, 95);
+    InitBiomeScheme(biome_scheme, BIOME_DESERT, BLOCK_AIR, 250, 148, 24);
 
     for (int y = 0; y < _height; y++)
     {

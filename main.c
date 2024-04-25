@@ -16,6 +16,9 @@
 #include <Player/Controller.h>
 #include <Shaders/Shader.h>
 #include <Textures/BitmapCreator.h>
+#include <Textures/Block.h>
+#include <Textures/BlockDef.h>
+#include <Textures/ColorMap.h>
 #include <Textures/DrawNoise.h>
 #include <Textures/TextureSet.h>
 #include <Utils/FileUtils.h>

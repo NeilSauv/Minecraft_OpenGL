@@ -1,4 +1,5 @@
 CC = gcc
+PYTHON = python3
 
 INCLUDES = -I./opengl -I./
 LIBRARIES = -L./opengl/
@@ -14,7 +15,7 @@ SRC = $(shell find . -type f -name '*.c')
 HEADERS = $(shell find . -type f -name '*.h')
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 
-all: format $(TARGET)
+all: format check_files $(TARGET)
 
 run: all
 	./$(TARGET)
@@ -39,4 +40,11 @@ clean:
 	-rm -f $(TARGET)
 	-rm -rf $(BUILD_DIR)
 
-.PHONY: all free clean format
+check_files:
+	@if [ ! -e "Texture/Block.h" ] || [ ! -e "Texture/Block.c" ]; then \
+		echo "One or both of the files Texture/Block.h and Texture/Block.c do not exist."; \
+		echo "Running atlas_generator.py..."; \
+		$(PYTHON) Scripts/atlas_generator.py; \
+	fi
+
+.PHONY: all free clean format check_files

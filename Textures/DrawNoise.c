@@ -6,6 +6,8 @@
 #include <stdlib.h>
 
 #include "Generators/Noises/SimplexNoise.h"
+#include "Textures/BlockDef.h"
+#include "Textures/ColorMap.h"
 struct SimplexNoiseObj;
 
 #include <Generators/Noises/NoiseStruct.h>
@@ -22,13 +24,13 @@ float scaleRange(float value, float fromLow, float fromHigh, float toLow,
 unsigned char *pixels;
 
 BlockTypeEnum GetBlockType(float height, SimplexNoiseObj *noise,
-                           BlockInfoStruct *block)
+                           struct BlockInfoStruct *block)
 {
-    ColorScheme *colorScheme = noise->colorScheme;
+    struct ColorScheme *colorScheme = noise->colorScheme;
 
     // Return 'Air' if blocks are not used in the color scheme
     if (!colorScheme->useBlock)
-        return Air;
+        return BLOCK_AIR;
 
     Scheme *scheme = colorScheme->begin;
     Scheme *lastValidScheme = NULL;
@@ -64,9 +66,9 @@ BlockTypeEnum GetBlockType(float height, SimplexNoiseObj *noise,
     {
         // Fallback to default block type and pattern if somehow no scheme was
         // valid
-        block->blockType = Grass;
+        block->blockType = BLOCK_GRASS_BLOCK;
         block->pattern = NULL;
-        return Grass;
+        return BLOCK_GRASS_BLOCK;
     }
 }
 

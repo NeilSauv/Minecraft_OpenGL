@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "Generators/Noises/NoiseStruct.h"
+#include "Textures/ColorMap.h"
 #include "bits/stdint-uintn.h"
 #pragma pack(push, 1)
 void ColorBMP(SimplexNoiseObj *noise, char *name);
