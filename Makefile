@@ -41,10 +41,10 @@ clean:
 	-rm -rf $(BUILD_DIR)
 
 check_files:
-	@if [ ! -e "Texture/Block.h" ] || [ ! -e "Texture/Block.c" ]; then \
+	@if [ ! -e "Textures/Block.h" ] || [ ! -e "Textures/Block.c" ]; then \
 		echo "One or both of the files Texture/Block.h and Texture/Block.c do not exist."; \
 		echo "Running atlas_generator.py..."; \
 		$(PYTHON) Scripts/atlas_generator.py; \
-	fi
+		fi
 
 .PHONY: all free clean format check_files
