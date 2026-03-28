@@ -1,5 +1,10 @@
-#include <glad/glad.h>
 
+#define NOMINMAX
+#include <windows.h>
+
+#include <stb/stb_image.h>
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <cglm/cglm.h>
@@ -30,28 +35,76 @@ const unsigned int SCR_HEIGHT;
 GLFWwindow *window;
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void CreateWindow();
+void CreateGameWindow();
 // settings
 const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
+#define CHECK(cond, msg)                                                       \
+    if (!(cond))                                                               \
+    {                                                                          \
+        printf("ERROR: %s\n", msg);                                            \
+        exit(1);                                                               \
+    }
+
+void CheckGLError(const char *step)
+{
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR)
+    {
+        printf("GL ERROR at %s: %d\n", step, err);
+    }
+}
+
+void CheckFile(const char *path)
+{
+    FILE *f = fopen(path, "rb");
+    if (!f)
+    {
+        printf("MISSING FILE: %s\n", path);
+    }
+    else
+    {
+        printf("FOUND FILE: %s\n", path);
+        fclose(f);
+    }
+}
+
 int main()
 {
-    OpenFile();
+    char cwd[MAX_PATH];
+    GetCurrentDirectoryA(MAX_PATH, cwd);
+    printf("WORKING DIR: %s\n", cwd);
+
+    CheckFile("Shaders/BasicVertices.vert");
+    CheckFile("Shaders/BasicColor.frag");
+    CheckFile("Textures/Pictures/atlas.png");
+    CheckFile("Textures/Pictures/selected.png");
+
+    OpenLogFile();
+    printf("InitNoiseStruct\n");
     InitNoiseStruct();
+    CHECK(heightNoise != NULL, "heightNoise NULL");
+
+    printf("Init Simplex\n");
     open_simplex_noise(200, heightNoise);
     open_simplex_noise(201, rainingNoise);
     open_simplex_noise(202, temperatureNoise);
 
+    printf("InitBiomeAtlas\n");
     InitBiomeAtlas();
 
+    printf("InitHeightColorScheme\n");
     InitHeightColorScheme();
 
+    printf("InitBlockPattern\n");
     InitBlockPattern(heightNoise);
 
+    printf("CompleteNoiseMap\n");
     CompleteNoiseMap(heightNoise);
     CompleteNoiseMap(temperatureNoise);
     CompleteNoiseMap(rainingNoise);
+
     DrawNoise(heightNoise, "Height");
     BiomeSetup(heightNoise, temperatureNoise, rainingNoise);
 
@@ -60,10 +113,11 @@ int main()
     DrawNoise(rainingNoise, "Raining");
     BiomeBPM();
     // Window
-    CreateWindow();
+    CreateGameWindow();
 
     // Shaders
     ReadShader("Shaders/BasicVertices.vert", "Shaders/BasicColor.frag");
+    CHECK(shaderProgram != 0, "SHADER PROGRAM INVALID");
 
     // Init Regions
     InitRegion();
@@ -76,7 +130,7 @@ int main()
 
     glfwSetMouseButtonCallback(window, mouse_callback);
     mat4 projection = { { 0.0, 0.0, 0.0 } };
-    glm_perspective(glm_rad(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
+    glm_perspective(glm_rad(75.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
                     100.0f, projection);
 
     glfwSetCursorPos(window, SCR_WIDTH / 2.f, SCR_HEIGHT / 2.f);
@@ -89,6 +143,27 @@ int main()
     glBindTexture(GL_TEXTURE_2D, texture1);
     double lastTime = glfwGetTime();
     int nbFrames = 0;
+
+    int atlasWidth = 0, atlasHeight = 0, atlasChannels = 0;
+    if (!stbi_info("Textures/Pictures/atlas.png", &atlasWidth, &atlasHeight,
+                   &atlasChannels))
+        printf("stbi_info FAILED: %s\n", stbi_failure_reason());
+    else
+        printf("Atlas loaded: %dx%d\n", atlasWidth, atlasHeight);
+    int atlasCols = atlasWidth / 16;
+    int atlasRows = atlasHeight / 16;
+    printf("Atlas grid: %d x %d\n", atlasCols, atlasRows);
+
+    GLuint blockPatternsSSBO;
+    glGenBuffers(1, &blockPatternsSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, blockPatternsSSBO);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(int) * 6144, blockPatterns,
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, blockPatternsSSBO);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    CheckGLError("Before Render Loop");
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -113,14 +188,14 @@ int main()
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        CheckGLError("glClear");
 
         glUniform1i(glGetUniformLocation(shaderProgram, "atlas"), 0);
-
-        glUniform1iv(glGetUniformLocation(shaderProgram, "rendering"),
-                     ChunkSize * ChunkSize * ChunkSize, &rendering[0]);
+        CheckGLError("glUniform atlas");
 
         glUniform1i(glGetUniformLocation(shaderProgram, "ChunkSize"),
                     ChunkSize);
+        CheckGLError("glUniform ChunkSize");
 
         mat4 view;
         glm_mat4_identity(view);
@@ -132,28 +207,35 @@ int main()
         mat4 model;
         glm_mat4_identity(model);
 
-        glm_perspective(glm_rad(45.0f), SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
+        glm_perspective(glm_rad(75.0f), SCR_WIDTH / (float)SCR_HEIGHT, 0.1f,
                         10000.0, projection);
 
         // Compile Shader
         CompileShader();
+        CheckGLError("CompileShader");
 
         // Uniform vars
         unsigned int projectionLoc =
             glGetUniformLocation(shaderProgram, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE,
                            (const GLfloat *)projection);
+        CheckGLError("glUniformMatrix4fv projection");
         unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, (const GLfloat *)model);
+        CheckGLError("glUniformMatrix4fv model");
         unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, (const GLfloat *)view);
-        unsigned int blockPatternsUniform =
-            glGetUniformLocation(shaderProgram, "blockPatterns");
-        glUniform1iv(blockPatternsUniform, 42, blockPatterns);
+        CheckGLError("glUniformMatrix4fv view");
+
+        glUniform2i(glGetUniformLocation(shaderProgram, "atlasGrid"), atlasCols,
+                    atlasRows);
+        CheckGLError("glUniform2i atlasGrid");
 
         Update();
+        CheckGLError("Update");
 
         DrawChunk();
+        CheckGLError("DrawChunk");
 
         // Swap Buffers
         glfwSwapBuffers(window);
@@ -176,11 +258,11 @@ int main()
     return 0;
 }
 
-void CreateWindow()
+void CreateGameWindow()
 {
     // glfw: initialize and configure
     // ------------------------------
-    glfwInit();
+    CHECK(glfwInit(), "GLFW INIT FAILED");
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -206,6 +288,7 @@ void CreateWindow()
         printf("Failed to initialize GLAD");
         return;
     }
+    CheckGLError("GLAD INIT");
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback

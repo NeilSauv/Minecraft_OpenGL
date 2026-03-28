@@ -11,7 +11,7 @@
 struct SimplexNoiseObj *heightNoise = NULL;
 struct SimplexNoiseObj *temperatureNoise = NULL;
 struct SimplexNoiseObj *rainingNoise = NULL;
-int blockPatterns[42];
+int blockPatterns[6144];
 
 struct RGBH ***InitNoiseMap()
 {

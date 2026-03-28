@@ -57,7 +57,7 @@ def create_texture_atlas(directory, output_file, code_file):
 
     with open(code_file + ".c", 'w') as file:
         file.write('#include "Block.h"\n#include <Generators/Noises/NoiseStruct.h>\n#include <Textures/ColorMap.h>\n#include <Textures/BlockDef.h>\n#include <stdlib.h>\n\n')
-        file.write('void InitBlockPattern(struct SimplexNoiseObj *noise)\n{\n    ColorScheme *colorScheme = noise->colorScheme;\n    int size = colorScheme->size;\n    BlockPattern **patterns = malloc(sizeof(BlockPattern *) * size);\n    colorScheme->patterns = patterns;\n\n')
+        file.write('void InitBlockPattern(struct SimplexNoiseObj *noise)\n{\n    ColorScheme *colorScheme = noise->colorScheme;\n    BlockPattern **patterns = malloc(sizeof(BlockPattern *) * ' + str(len(image_data)) + ');\n    colorScheme->patterns = patterns;\n\n')
         for block, textures in image_data.items():
             none = index_map.get(f"{block}_none", -1)
             top = index_map.get(f"{block}_top", none)

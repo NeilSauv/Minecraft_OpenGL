@@ -21,8 +21,8 @@ void AddToBlockPattern(enum BlockTypeEnum block, int top, int bottom, int side1,
 
     blockPatterns[block * 6 + 0] = top;
     blockPatterns[block * 6 + 1] = side1;
-    blockPatterns[block * 6 + 2] = side2;
-    blockPatterns[block * 6 + 3] = side3;
-    blockPatterns[block * 6 + 4] = side4;
-    blockPatterns[block * 6 + 5] = bottom;
+    blockPatterns[block * 6 + 2] = bottom;
+    blockPatterns[block * 6 + 3] = side2;
+    blockPatterns[block * 6 + 4] = side3;
+    blockPatterns[block * 6 + 5] = side4;
 }

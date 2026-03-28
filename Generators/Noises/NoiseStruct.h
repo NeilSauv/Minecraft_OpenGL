@@ -28,7 +28,7 @@ extern struct SimplexNoiseObj *heightNoise;
 extern struct SimplexNoiseObj *temperatureNoise;
 extern struct SimplexNoiseObj *rainingNoise;
 
-extern int blockPatterns[42];
+extern int blockPatterns[6144];
 
 void InitNoiseStruct();
 

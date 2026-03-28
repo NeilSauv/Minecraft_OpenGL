@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bits/stdint-uintn.h"
+#include <stdint.h>
 
 #define STRETCH_CONSTANT_2D                                                    \
     (-0.211324865405187) /* (1 / sqrt(2 + 1) - 1 ) / 2; */

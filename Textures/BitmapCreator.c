@@ -1,14 +1,14 @@
 #include "BitmapCreator.h"
 
+#include <windows.h>
 #include <Generators/Chunk/BiomeGenerator.h>
 #include <Generators/Noises/SimplexNoise.h>
 #include <malloc.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "Generators/Noises/NoiseStruct.h"
 #include "Textures/ColorMap.h"
-#include "bits/stdint-uintn.h"
+#include <stdint.h>
 #pragma pack(push, 1)
 void ColorBMP(SimplexNoiseObj *noise, char *name);
 void MonoBMP(SimplexNoiseObj *noise, char *name);
@@ -82,8 +82,10 @@ void CreateBMP(SimplexNoiseObj *noise, char *name)
 
 void ColorBMP(SimplexNoiseObj *noise, char *name)
 {
+    CreateDirectoryA("test", NULL);
     char *path = Concatenate("test/", name, "_RGB.bmp");
-    FILE *fp = fopen(path, "wb");
+    HANDLE fp = CreateFileA(path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+                            FILE_ATTRIBUTE_NORMAL, NULL);
 
     bitmap *pbitmap = calloc(1, sizeof(bitmap));
 
@@ -115,17 +117,23 @@ void ColorBMP(SimplexNoiseObj *noise, char *name)
         }
     }
 
-    fwrite(pbitmap, 1, sizeof(bitmap), fp);
-    fwrite(pixels, 1, _pixelbytesize, fp);
-    fclose(fp);
+    if (fp != INVALID_HANDLE_VALUE)
+    {
+        DWORD written;
+        WriteFile(fp, pbitmap, (DWORD)sizeof(bitmap), &written, NULL);
+        WriteFile(fp, pixels, (DWORD)_pixelbytesize, &written, NULL);
+        CloseHandle(fp);
+    }
     free(pbitmap);
     free(pixels);
 }
 
 void MonoBMP(struct SimplexNoiseObj *noise, char *name)
 {
+    CreateDirectoryA("test", NULL);
     char *path = Concatenate("test/", name, "_BW.bmp");
-    FILE *fp = fopen(path, "wb");
+    HANDLE fp = CreateFileA(path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+                            FILE_ATTRIBUTE_NORMAL, NULL);
 
     bitmap *pbitmap = calloc(1, sizeof(bitmap));
     unsigned char *pixels = malloc(_height * _width * 3);
@@ -158,18 +166,24 @@ void MonoBMP(struct SimplexNoiseObj *noise, char *name)
         }
     }
 
-    fwrite(pbitmap, 1, sizeof(bitmap), fp);
-    fwrite(pixels, 1, _pixelbytesize, fp);
-    fclose(fp);
+    if (fp != INVALID_HANDLE_VALUE)
+    {
+        DWORD written;
+        WriteFile(fp, pbitmap, (DWORD)sizeof(bitmap), &written, NULL);
+        WriteFile(fp, pixels, (DWORD)_pixelbytesize, &written, NULL);
+        CloseHandle(fp);
+    }
     free(pbitmap);
     free(pixels);
 }
 
 void BiomeBPM()
 {
+    CreateDirectoryA("test", NULL);
     char *path = "test/Biomes_RGB.bmp";
 
-    FILE *fp = fopen(path, "wb");
+    HANDLE fp = CreateFileA(path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
+                            FILE_ATTRIBUTE_NORMAL, NULL);
 
     bitmap *pbitmap = calloc(1, sizeof(bitmap));
     unsigned char *pixels = malloc(_height * _width * 3);
@@ -213,9 +227,13 @@ void BiomeBPM()
         }
     }
 
-    fwrite(pbitmap, 1, sizeof(bitmap), fp);
-    fwrite(pixels, 1, _pixelbytesize, fp);
-    fclose(fp);
+    if (fp != INVALID_HANDLE_VALUE)
+    {
+        DWORD written;
+        WriteFile(fp, pbitmap, (DWORD)sizeof(bitmap), &written, NULL);
+        WriteFile(fp, pixels, (DWORD)_pixelbytesize, &written, NULL);
+        CloseHandle(fp);
+    }
     free(pbitmap);
     free(pixels);
 }

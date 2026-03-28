@@ -13,6 +13,7 @@ unsigned int selectedTexture;
 
 void ApplyTexture()
 {
+    printf("Loading atlas.png...\n");
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -22,10 +23,12 @@ void ApplyTexture()
                   texture1); // all upcoming GL_TEXTURE_2D operations now have
                              // effect on this texture object
     // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-                    GL_REPEAT); // set texture wrapping to GL_REPEAT (default
-                                // wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+    // GL_REPEAT); // set texture wrapping to GL_REPEAT (default
+    // wrapping method)
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                     GL_NEAREST_MIPMAP_LINEAR);
@@ -40,6 +43,7 @@ void ApplyTexture()
 
     if (data)
     {
+        printf("Atlas loaded: %dx%d\n", width, height);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, data);
         // glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 16, 16, GL_RGBA,
@@ -48,7 +52,7 @@ void ApplyTexture()
     }
     else
     {
-        printf("Failed to load texture");
+        printf("FAILED atlas load: %s\n", stbi_failure_reason());
         return;
     }
     stbi_image_free(data);
@@ -62,10 +66,8 @@ void ApplyTexture()
                   selectedTexture); // all upcoming GL_TEXTURE_2D operations now
                                     // have effect on this texture object
     // set the texture wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-                    GL_EXTENSIONS); // set texture wrapping to GL_REPEAT
-                                    // (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_EXTENSIONS);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                     GL_NEAREST_MIPMAP_LINEAR);
@@ -84,8 +86,7 @@ void ApplyTexture()
     }
     else
     {
-        printf("Failed to load texture");
-        return;
+        printf("WARNING: selected.png not found → skipping\n");
     }
     stbi_image_free(data);
 }

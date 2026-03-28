@@ -196,6 +196,8 @@ unsigned int indices[] = {
     20, 21, 22, 22, 21, 23,
 };
 
+int renderCount = 0;
+
 void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
 {
     // Vertices
@@ -240,7 +242,7 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
 
     GetNoiseMap(xAxis, zAxis, heightNoise, blocks);
 
-    int renderCount = 0;
+    renderCount = 0;
     if (yAxis)
         return;
 
@@ -248,14 +250,22 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
     {
         for (int z = 0; z < ChunkSize; z++)
         {
-            int height = blocks[z * ChunkSize + x]->height * ChunkHeight;
+            // int height = blocks[z * ChunkSize + x]->height * ChunkHeight;
+            float heightF = blocks[z * ChunkSize + x]->height;
+            int height = (int)(heightF * ChunkHeight);
 
             int highest = height > WaterLevel ? height : WaterLevel;
+            // BlockTypeEnum block = blocks[z * ChunkSize + x]->blockType;
+            // block = highest == height ? block : BLOCK_WATER_FLOW;
             BlockTypeEnum block = blocks[z * ChunkSize + x]->blockType;
-            block = highest == height ? block : BLOCK_WATER_FLOW;
+
+            if (height < WaterLevel)
+                block = BLOCK_WATER_FLOW;
             translations[renderCount][0] = x + xAxis;
+            // translations[renderCount][1] =
+            // height > BLOCK_WATER_FLOW ? height : BLOCK_WATER_FLOW;
             translations[renderCount][1] =
-                height > BLOCK_WATER_FLOW ? height : BLOCK_WATER_FLOW;
+                height > WaterLevel ? height : WaterLevel;
             translations[renderCount][2] = z + zAxis;
 
             rendering[renderCount * 4] = block;
@@ -278,9 +288,17 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
     glBindBuffer(GL_ARRAY_BUFFER, renderVBO[i]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(int) * renderCount * 4, &rendering[0],
                  GL_STATIC_DRAW);
-    glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, sizeof(int) * 4, (void *)0);
+    // glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, sizeof(int) * 4, (void
+    // *)0);
+    glVertexAttribIPointer(4, 4, GL_INT, sizeof(int) * 4, (void *)0);
     glEnableVertexAttribArray(4);
     glVertexAttribDivisor(4, 1);
+
+    for (int j = 0; j < ChunkSize * ChunkSize; j++)
+    {
+        free(blocks[j]);
+    }
+    free(blocks);
 }
 
 int multFaces[] = { 0, 1, 1, 1, 1, 2 };
@@ -315,7 +333,7 @@ void Draw(int i)
     {
         glBindVertexArray(VAO[n]);
         glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0,
-                                (ChunkSize) * (ChunkSize));
+                                renderCount);
         n++;
     }
 }

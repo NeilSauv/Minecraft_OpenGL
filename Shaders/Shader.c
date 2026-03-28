@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+#include <windows.h>
+
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -27,7 +29,7 @@ void ReadShader(const char *vertPath, const char *fragPath)
     if (!success)
     {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        printf("error vertex shader");
+        printf("VERTEX SHADER COMPILE ERROR:\n%s\n", infoLog);
         return;
     }
     // fragment shader
@@ -39,7 +41,7 @@ void ReadShader(const char *vertPath, const char *fragPath)
     if (!success)
     {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        printf("error fragment shader");
+        printf("FRAGMENT SHADER COMPILE ERROR:\n%s\n", infoLog);
         return;
     }
     // link shaders
@@ -52,44 +54,42 @@ void ReadShader(const char *vertPath, const char *fragPath)
     if (!success)
     {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        printf("error shader program");
+        printf("SHADER LINK ERROR:\n%s\n", infoLog);
         return;
     }
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
+
 char *Read(const char *path)
 {
-    FILE *textfile;
-    char *text;
-    long numbytes;
-
-    textfile = fopen(path, "r");
-    if (!textfile)
+    HANDLE hFile = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL,
+                               OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile == INVALID_HANDLE_VALUE)
     {
         printf("ReadPath is NULL");
         return NULL;
     }
 
-    fseek(textfile, 0L, SEEK_END);
-    numbytes = ftell(textfile);
-    fseek(textfile, 0L, SEEK_SET);
+    DWORD numbytes = GetFileSize(hFile, NULL);
 
-    text = (char *)calloc(numbytes, sizeof(char));
-
+    char *text = (char *)calloc(numbytes + 1, sizeof(char));
     if (!text)
     {
         printf("Read calloc failed");
+        CloseHandle(hFile);
         return NULL;
     }
 
-    int res = fread(text, sizeof(char), numbytes, textfile);
-    if (!res)
+    DWORD bytesRead;
+    BOOL res = ReadFile(hFile, text, numbytes, &bytesRead, NULL);
+    if (!res || bytesRead == 0)
     {
-        printf("READ fread NULL");
+        printf("READ ReadFile failed");
+        CloseHandle(hFile);
         return NULL;
     }
-    fclose(textfile);
+    CloseHandle(hFile);
 
     return text;
 }

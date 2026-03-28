@@ -17,20 +17,20 @@ BinPackArguments: true
 BinPackParameters: true
 BreakBeforeBraces: Custom
 BraceWrapping:
-    AfterEnum: true
-    AfterClass: true
-    AfterControlStatement: true
-    AfterFunction: true
-    AfterNamespace: true
-    AfterStruct: true
-    AfterUnion: true
-    AfterExternBlock: true
-    BeforeCatch: true
-    BeforeElse: true
-    IndentBraces: false
-    SplitEmptyFunction: false
-    SplitEmptyRecord: false
-    SplitEmptyNamespace: false
+  AfterEnum: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
 BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
@@ -42,18 +42,18 @@ ConstructorInitializerIndentWidth: 4
 Cpp11BracedListStyle: false
 DerivePointerAlignment: false
 FixNamespaceComments: true
-ForEachMacros: ['ILIST_FOREACH', 'ILIST_FOREACH_ENTRY']
+ForEachMacros: ["ILIST_FOREACH", "ILIST_FOREACH_ENTRY"]
 IncludeBlocks: Regroup
 
 IncludeCategories:
-    - Regex: '^<glad/glad\.h>$'
-      Priority: 1
-    - Regex: '^<GLFW/glfw3\.h>$'
-      Priority: 2
-    - Regex: '<.*>'
-      Priority: 3
-    - Regex: '.*'
-      Priority: 4
+  - Regex: '^<glad/glad\.h>$'
+    Priority: 1
+  - Regex: '^<GLFW/glfw3\.h>$'
+    Priority: 2
+  - Regex: "<.*>"
+    Priority: 3
+  - Regex: ".*"
+    Priority: 4
 IndentCaseLabels: false
 IndentPPDirectives: AfterHash
 IndentWidth: 4
@@ -63,7 +63,7 @@ Language: Cpp
 NamespaceIndentation: All
 PointerAlignment: Right
 ReflowComments: true
-SortIncludes: true
+SortIncludes: false
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
 SpaceAfterTemplateKeyword: true

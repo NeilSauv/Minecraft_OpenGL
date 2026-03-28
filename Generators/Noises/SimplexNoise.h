@@ -3,7 +3,7 @@
 
 #include <Generators/Noises/NoiseStruct.h>
 
-#include "bits/stdint-intn.h"
+#include <stdint.h>
 
 /*
  * OpenSimplex (Simplectic) Noise in C.

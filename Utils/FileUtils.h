@@ -3,7 +3,7 @@
 
 #include <cglm/cglm.h>
 
-void OpenFile();
+void OpenLogFile();
 
 void WriteLine(char string[]);
 
@@ -20,7 +20,5 @@ void PrintMat4(mat4 mat);
 void PrintArr3(float arr[]);
 
 void CloseFile();
-
-extern FILE* file;
 
 #endif // !FILE_UTILS
