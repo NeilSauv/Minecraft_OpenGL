@@ -51,12 +51,16 @@ void InitHeightColorScheme()
     heightColorScheme->size = 0;
     heightColorScheme->useBlock = 1;
 
-    AddColorScheme(BLOCK_SNOW, 0.85f, 255, 255, 255, heightColorScheme);
-    AddColorScheme(BLOCK_STONE, 0.80f, 163, 163, 163, heightColorScheme);
-    AddColorScheme(BLOCK_GRASS_BLOCK, 0.03f, 0, 255, 0, heightColorScheme);
-    AddColorScheme(BLOCK_SAND, 0.00f, 200, 255, 0, heightColorScheme);
-    AddColorScheme(BLOCK_WATER_FLOW, heightNoise->minNoiseHeight, 0, 0, 255,
-                   heightColorScheme);
+    AddColorScheme(BLOCK_SNOW, 0.85f, 240, 245, 250,
+                   heightColorScheme); // Neige bleutée
+    AddColorScheme(BLOCK_STONE, 0.80f, 130, 135, 140,
+                   heightColorScheme); // Roche neutre
+    AddColorScheme(BLOCK_GRASS_BLOCK, 0.03f, 95, 160, 80,
+                   heightColorScheme); // Herbe douce
+    AddColorScheme(BLOCK_SAND, 0.00f, 220, 200, 140,
+                   heightColorScheme); // Sable pâle
+    AddColorScheme(BLOCK_WATER_FLOW, heightNoise->minNoiseHeight, 60, 120, 200,
+                   heightColorScheme); // Eau douce
 
     ColorScheme *temperatureColorScheme = temperatureNoise->colorScheme;
 

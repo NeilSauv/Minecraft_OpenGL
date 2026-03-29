@@ -24,9 +24,6 @@ void GenerateChunks()
 
     glGenBuffers(chunks, (GLuint *)&VBO); // Generate buffer
     glGenBuffers(chunks, (GLuint *)&EBO);
-    glGenBuffers(chunks, (GLuint *)&faceVBO);
-    glGenBuffers(chunks, (GLuint *)&instanceVBO);
-    glGenBuffers(chunks, (GLuint *)&renderVBO);
 
     for (int x = -ChunkView; x < ChunkView; x += 1)
     {
@@ -163,7 +160,4 @@ void ClearChunk()
     glDeleteBuffers(count, (GLuint *)&VBO);
     glDeleteBuffers(count, (GLuint *)&EBO);
     glDeleteBuffers(count, (GLuint *)&VAO);
-    glDeleteBuffers(count, (GLuint *)&faceVBO);
-    glDeleteBuffers(count, (GLuint *)&instanceVBO);
-    glDeleteBuffers(count, (GLuint *)&renderVBO);
 }

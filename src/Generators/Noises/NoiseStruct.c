@@ -95,7 +95,7 @@ void InitNoiseStruct()
     heightNoise->noiseMap = InitNoiseMap();
     heightNoise->scale = 0.03f;
     heightNoise->octaves = 5;
-    heightNoise->persistance = 0.2f;
+    heightNoise->persistance = 0.15f;
     heightNoise->lacunarity = 2.5f;
     heightNoise->amplitude = 1.0f;
     heightNoise->maxNoiseHeight = 1.0f;
