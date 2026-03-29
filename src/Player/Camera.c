@@ -1,48 +1,52 @@
-#include <glad/glad.h>
+#include "Camera.h"
+#include <math.h>
 
-#include <GLFW/glfw3.h>
+// Vecteurs initiaux parfaitement alignés
+vec3 forward = { 1.0f, 0.0f, 0.0f }; // On regarde vers l'avant
+vec3 up = { 0.0f, 0.0f, 1.0f };
+vec3 right = { 0.0f, 1.0f, 0.0f };
+vec3 worldUp = { 0.0f, 0.0f, 1.0f }; // La gravité de la planète locale
 
-#include <cglm/cglm.h>
-
-vec3 forward = { 0.0f, 0.0f, -1.0f };
-vec3 up = { 0.0f, 1.0f, 0.0f };
-vec3 right = { 1.0, 0.0f, 0.0f };
-
-float yaw = 270.0f;
-float pitch = 0;
-
-float lastX = 1000 / 2.f;
-float lastY = 1000 / 2.f;
+float lastX = 1920.0f / 2.0f;
+float lastY = 1080.0f / 2.0f;
 
 void ProcessMouse(GLFWwindow *window)
 {
-    double cursorX = 0;
-    double cursorY = 0;
-
+    double cursorX, cursorY;
     glfwGetCursorPos(window, &cursorX, &cursorY);
 
-    float xOffset = cursorX - lastX;
-    float yOffset = lastY - cursorY;
+    float xOffset = (float)cursorX - lastX;
+    float yOffset = lastY - (float)cursorY;
+    float sensitivity = 0.002f;
 
-    float sensitivity = 0.15f;
+    // 1. Yaw : On tourne autour de la gravité locale (worldUp)
+    glm_vec3_rotate(forward, -xOffset * sensitivity, worldUp);
 
-    yaw += xOffset * sensitivity;
-    pitch += yOffset * sensitivity;
+    // 2. Pitch : On calcule l'angle pour bloquer avant la verticale pure
+    float pitchAngle = yOffset * sensitivity;
+    float currentDot = glm_vec3_dot(forward, worldUp);
+    float currentAngle =
+        acos(fmaxf(-1.0f, fminf(1.0f, currentDot))); // Sécurité anti-crash
 
-    if (pitch > 89.999f)
-        pitch = 89.999f;
-    if (pitch < -89.999f)
-        pitch = -89.999f;
+    float limit = 0.05f; // Limite de 3 degrés environ
+    if (currentAngle - pitchAngle < limit)
+        pitchAngle = currentAngle - limit;
+    if (currentAngle - pitchAngle > 3.14159f - limit)
+        pitchAngle = currentAngle - (3.14159f - limit);
 
-    if (yaw > 360)
-        yaw = 0;
-    else if (yaw < 0)
-        yaw = 360;
+    // On calcule l'axe de rotation du Pitch (temporaire)
+    vec3 tempRight;
+    glm_vec3_cross(forward, worldUp, tempRight);
+    glm_normalize(tempRight);
 
-    vec3 direction = { cos(glm_rad(yaw)) * cos(glm_rad(pitch)),
-                       sin(glm_rad(pitch)),
-                       sin(glm_rad(yaw)) * cos(glm_rad(pitch)) };
+    // On applique le Pitch
+    glm_vec3_rotate(forward, pitchAngle, tempRight);
 
-    glm_normalize_to(direction, forward);
-    glfwSetCursorPos(window, 1000 / 2.f, 1000 / 2.f);
+    // 3. Orthonormalisation (Le secret pour ne plus jamais bloquer la caméra)
+    glm_vec3_cross(forward, worldUp, right);
+    glm_normalize(right);
+    glm_vec3_cross(right, forward, up);
+    glm_normalize(up);
+
+    glfwSetCursorPos(window, 1920.0f / 2.0f, 1080.0f / 2.0f);
 }

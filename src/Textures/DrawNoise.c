@@ -190,3 +190,32 @@ float scaledOpenSimplexNoise2D(SimplexNoiseObj *noise, float x, float y,
     return scaleRange(noiseVal, -1.0f, 1.0f, noise->minNoiseHeight,
                       noise->maxNoiseHeight);
 }
+
+float GetSingleNoiseVal3D(float x, float y, float z, BlockInfoStruct *block,
+                          SimplexNoiseObj *noise)
+{
+    float amplitude = noise->amplitude;
+    float scale = noise->scale;
+    float noiseHeight = 0;
+
+    for (int i = 0; i < noise->octaves; i++)
+    {
+        // On utilise ici open_simplex_noise3 avec x, y et z !
+        float noiseValue = (float)open_simplex_noise3(noise->ctx, x * scale,
+                                                      y * scale, z * scale);
+
+        noiseHeight += noiseValue * amplitude;
+        amplitude *= noise->persistance;
+        scale *= noise->lacunarity;
+    }
+
+    float height = scaleRange(noiseHeight, -1, 1, noise->minNoiseHeight,
+                              noise->maxNoiseHeight);
+
+    if (block)
+    {
+        block->height = height;
+        block->blockType = GetBlockType(height, noise, block);
+    }
+    return height;
+}

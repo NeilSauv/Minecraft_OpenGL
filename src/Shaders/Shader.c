@@ -97,7 +97,6 @@ char *Read(const char *path)
 void CompileShader()
 {
     glUseProgram(shaderProgram);
-    glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
 }
 
 void ClearShader()

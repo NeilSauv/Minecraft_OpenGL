@@ -93,10 +93,10 @@ void InitNoiseStruct()
     heightNoise->colorScheme = malloc(sizeof(ColorScheme));
     heightNoise->blocks = InitBlockInfoStruct();
     heightNoise->noiseMap = InitNoiseMap();
-    heightNoise->scale = 0.03f;
+    heightNoise->scale = 1.5f;
     heightNoise->octaves = 5;
-    heightNoise->persistance = 0.15f;
-    heightNoise->lacunarity = 2.5f;
+    heightNoise->persistance = 0.45f;
+    heightNoise->lacunarity = 2.0f;
     heightNoise->amplitude = 1.0f;
     heightNoise->maxNoiseHeight = 1.0f;
     heightNoise->minNoiseHeight = -0.7f;

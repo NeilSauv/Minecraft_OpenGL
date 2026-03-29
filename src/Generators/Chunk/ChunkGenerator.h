@@ -5,16 +5,17 @@
 
 #define ChunkSize 16
 #define ChunkHeight 256
-#define ChunkView 15 * 4
+#define ChunkView 15 * 5
 
-#define VERTICES_PER_CHUNK ((ChunkSize + 1) * (ChunkSize + 1))
+#define VERTICES_PER_CHUNK                                                     \
+    (ChunkSize * ChunkSize * 6) // 6 floats par sommet (position + couleur)
 
 // Pour relier ces sommets, on fait des carrés de 2 triangles (6 indices) par
 // case (ChunkSize * ChunkSize)
 #define INDICES_PER_CHUNK (ChunkSize * ChunkSize * 6)
 
 // Nouvelles structures de données (au revoir les VBO d'instances)
-extern float chunkVertices[VERTICES_PER_CHUNK * 6];
+extern float chunkVertices[VERTICES_PER_CHUNK * 9];
 extern unsigned int chunkIndices[INDICES_PER_CHUNK];
 
 extern unsigned int VBO[ChunkView * ChunkView * 4];

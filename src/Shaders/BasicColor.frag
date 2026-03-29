@@ -1,8 +1,7 @@
 #version 430
 
-// AJOUT DU MOT CLÉ "flat" ICI AUSSI
 in flat vec3 vertexColor;
-in vec3 FragPos;
+in flat vec3 vertexNormal; // La normale parfaite arrive d'ici
 
 out vec4 FragColor;
 
@@ -11,9 +10,8 @@ const vec3 ambientLight = vec3(0.35);
 
 void main()
 {
-    vec3 xTangent = dFdx(FragPos);
-    vec3 yTangent = dFdy(FragPos);
-    vec3 faceNormal = normalize(cross(xTangent, yTangent));
+    // C'est magique : on normalise simplement la face !
+    vec3 faceNormal = normalize(vertexNormal);
     
     float diff = max(dot(faceNormal, lightDir), 0.0);
     vec3 lighting = ambientLight + (diff * vec3(0.65));

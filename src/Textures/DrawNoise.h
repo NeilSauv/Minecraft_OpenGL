@@ -11,4 +11,8 @@ void GetNoiseMap(int x, int y, struct SimplexNoiseObj *noise,
 float GetSingleNoiseVal(int x, int y, struct BlockInfoStruct *block,
                         struct SimplexNoiseObj *noise);
 
+float GetSingleNoiseVal3D(float x, float y, float z,
+                          struct BlockInfoStruct *block,
+                          struct SimplexNoiseObj *noise);
+
 #endif // !DRAW_NOISE
