@@ -47,7 +47,7 @@ The engine generates an infinite-looking 3D voxel world procedurally at startup 
 ## Architecture
 
 ```text
-main.c
+src/main.c
   │
   ├── Noise Init (NoiseStruct, SimplexNoise)
   │     three SimplexNoiseObj: heightNoise, temperatureNoise, rainingNoise
@@ -81,57 +81,60 @@ main.c
 
 ```text
 Minecraft_OpenGL/
-├── main.c                          # Entry point, render loop
 ├── CMakeLists.txt                  # Build system (CMake 3.16+)
 │
-├── Generators/
-│   ├── Noises/
-│   │   ├── NoiseStruct.h/.c        # SimplexNoiseObj definition, global instances
-│   │   └── SimplexNoise.h/.c       # OpenSimplex 2D/3D/4D implementation
-│   └── Chunk/
-│       ├── BiomeGenerator.h/.c     # Biome assignment and atlas lookup
-│       ├── ChunkGenerator.h/.c     # Mesh generation, GPU buffer upload
-│       ├── ChunkManager.h/.c       # Sliding-window chunk lifecycle
-│       └── Region.h/.c             # Per-region block modification tracking
-│
-├── Player/
-│   ├── Camera.h/.c                 # Yaw/pitch, forward/right/up vectors
-│   ├── Controller.h/.c             # WASD movement, sprint, god mode, gravity
-│   └── Destroy.h/.c                # Block destruction on mouse click
-│
-├── Physics/
-│   ├── Collisions.h/.c             # Height-based ground collision
-│   └── Ray.h/.c                    # Raycasting against terrain
-│
-├── Textures/
-│   ├── Block.h/.c                  # BlockTypeEnum (650+ types), InitBlockPattern()  [generated]
-│   ├── BlockDef.h/.c               # BlockPattern (6-face atlas indices)
-│   ├── ColorMap.h/.c               # Scheme linked list: height threshold → block/color
-│   ├── DrawNoise.h/.c              # Octave noise evaluation, block assignment
-│   ├── TextureSet.h/.c             # OpenGL texture creation (atlas.png)
-│   └── BitmapCreator.h/.c          # Debug BMP output (height, RGB, biome maps)
-│
-├── Shaders/
-│   ├── Shader.h/.c                 # Compile/link GLSL, Windows API file read
-│   ├── BasicVertices.vert          # Vertex shader (GLSL 4.3)
-│   └── BasicColor.frag             # Fragment shader (GLSL 4.3)
-│
-├── Utils/
-│   ├── Errors.h/.c                 # Malloc wrapper with error check
-│   ├── FileUtils.h/.c              # Debug log file (Windows API)
-│   ├── List.h/.c                   # Dynamic int list
-│   └── TimeUtils.h/.c              # Delta time (glfwGetTime based)
-│
-├── Scripts/
-│   └── atlas_generator.py          # Builds Textures/Block.h/.c + atlas.png from Assets/
+├── src/
+│   ├── main.c                      # Entry point, render loop
+│   │
+│   ├── Generators/
+│   │   ├── Noises/
+│   │   │   ├── NoiseStruct.h/.c    # SimplexNoiseObj definition, global instances
+│   │   │   └── SimplexNoise.h/.c   # OpenSimplex 2D/3D/4D implementation
+│   │   └── Chunk/
+│   │       ├── BiomeGenerator.h/.c # Biome assignment and atlas lookup
+│   │       ├── ChunkGenerator.h/.c # Mesh generation, GPU buffer upload
+│   │       ├── ChunkManager.h/.c   # Sliding-window chunk lifecycle
+│   │       └── Region.h/.c         # Per-region block modification tracking
+│   │
+│   ├── Player/
+│   │   ├── Camera.h/.c             # Yaw/pitch, forward/right/up vectors
+│   │   ├── Controller.h/.c         # WASD movement, sprint, god mode, gravity
+│   │   └── Destroy.h/.c            # Block destruction on mouse click
+│   │
+│   ├── Physics/
+│   │   ├── Collisions.h/.c         # Height-based ground collision
+│   │   └── Ray.h/.c                # Raycasting against terrain
+│   │
+│   ├── Textures/
+│   │   ├── Block.h/.c              # BlockTypeEnum (650+ types), InitBlockPattern()
+│   │   ├── BlockDef.h/.c           # BlockPattern (6-face atlas indices)
+│   │   ├── ColorMap.h/.c           # Scheme linked list: height threshold → block/color
+│   │   ├── DrawNoise.h/.c          # Octave noise evaluation, block assignment
+│   │   ├── TextureSet.h/.c         # OpenGL texture creation (atlas.png)
+│   │   └── BitmapCreator.h/.c      # Debug BMP output (height, RGB, biome maps)
+│   │
+│   ├── Shaders/
+│   │   ├── Shader.h/.c             # Compile/link GLSL, Windows API file read
+│   │   ├── BasicVertices.vert      # Vertex shader (GLSL 4.3)
+│   │   └── BasicColor.frag         # Fragment shader (GLSL 4.3)
+│   │
+│   └── Utils/
+│       ├── Errors.h/.c             # Malloc wrapper with error check
+│       ├── FileUtils.h/.c          # Debug log file (Windows API)
+│       ├── List.h/.c               # Dynamic int list
+│       └── TimeUtils.h/.c          # Delta time (glfwGetTime based)
 │
 ├── Assets/
-│   └── Block/                      # Individual 16×16 PNG textures per block face
+│   ├── Block/                      # Individual 16×16 PNG textures per block face
+│   └── Pictures/
+│       ├── atlas.png               # Packed texture atlas (runtime)
+│       └── biomeAtlas.bmp          # Biome lookup atlas (temperature × humidity)
 │
-└── opengl/                         # Vendored: glad, cglm, stb_image, stb_vorbis
+├── Scripts/
+│   └── atlas_generator.py          # Regenerates src/Textures/Block.h/.c + atlas.png
+│
+└── opengl/                         # Vendored: glad, cglm, stb_image, stb_perlin
 ```
-
-> `Textures/Block.h` and `Textures/Block.c` are **generated** by `atlas_generator.py` and are not committed. CMake runs the script automatically if they are missing.
 
 ---
 
@@ -139,17 +142,16 @@ Minecraft_OpenGL/
 
 | Library | Purpose | Location |
 | ------- | ------- | -------- |
-| GLFW 3 | Window creation, input | `C:/glfw3` (Windows) / system (Linux) |
+| GLFW 3 | Window creation, input | `C:/glfw3` (Windows) |
 | glad | OpenGL function loader | `opengl/glad/` (vendored) |
 | cglm | C math (vec3, mat4, …) | `opengl/cglm/` (vendored) |
 | stb_image | PNG loading (atlas) | `opengl/stb/stb_image.h` (vendored) |
 | OpenGL 4.3 | Rendering | Driver / `opengl32.lib` |
 
-**Windows only:**
+**Requirements (Windows only):**
 
 - Visual Studio 2022 toolchain (MSVC)
 - CMake 3.16+
-- Python 3 (for atlas generation at first build)
 - GLFW installed at `C:\glfw3` with `lib-vc2022` prebuilt binaries
 
 ---
@@ -160,29 +162,15 @@ Minecraft_OpenGL/
 
 ```bat
 cmake -B build
-cmake --build build --config Debug
-.\build\Debug\Minecraft.exe
+cmake --build build
+.\bin\Minecraft.exe
 ```
 
 CMake automatically:
 
-- Runs `atlas_generator.py` if `Textures/Block.h` or `Textures/Block.c` is missing
-- Copies `glfw3.dll` next to the executable
-- Copies `Textures/`, `Shaders/`, and `Assets/` next to the executable
-
-### Linux / GCC
-
-```bash
-cmake -B build
-cmake --build build
-./build/Minecraft
-```
-
-The `format` target runs `clang-format -i` on all project sources:
-
-```bash
-cmake --build build --target format
-```
+- Copies `glfw3.dll` next to the executable in `bin/`
+- Copies the `Assets/` directory next to the executable
+- Copies shaders to `bin/Assets/Shaders/`
 
 ---
 
@@ -222,7 +210,7 @@ The noise map size is `(ChunkView * 2 * ChunkSize)²` = **480 × 480** pixels.
 Biome assignment uses three noise maps together:
 
 1. **`temperatureNoise`** and **`rainingNoise`** are each normalized to `[0, 250]`.
-2. A 250×250 pixel **biome atlas image** (`Textures/Pictures/atlas.png`) encodes one RGB color per (temperature, humidity) combination.
+2. A 250×250 pixel **biome atlas image** (`Assets/Pictures/biomeAtlas.bmp`) encodes one RGB color per (temperature, humidity) combination.
 3. `BiomeSetup()` reads the atlas at `(temperature, humidity)` and writes the resulting color back into `heightNoise->noiseMap[y][x]`.
 
 **15 biome types** range from `BIOME_ICE` (cold/dry) through `BIOME_FOREST`, `BIOME_PLAINS`, `BIOME_JUNGLE`, to `BIOME_DESERT` (hot/dry).
@@ -314,7 +302,7 @@ When god mode is off, `Falling()` applies `9.8 m/s²` acceleration each frame un
 
 ### Physics & Collision
 
-`MovesCollisions(targetPos)` (`Physics/Collisions.c`):
+`MovesCollisions(targetPos)` (`src/Physics/Collisions.c`):
 
 1. Evaluates `GetSingleNoiseVal` at the target XZ position to get terrain height.
 2. Returns `true` (move allowed) only when `targetPos.y - 2.25 >= terrainHeight` and the player is above `WaterLevel = 0`.
@@ -407,7 +395,7 @@ typedef struct {
 } BlockPattern;
 ```
 
-Each field is an index into the packed texture atlas. Generated by `atlas_generator.py`.
+Each field is an index into the packed texture atlas.
 
 ### `regionList` / `DestroyList` (Region.h)
 
@@ -459,12 +447,18 @@ GLSL 4.3, per-vertex (pos, UV, face) + per-instance (offset, renderState) attrib
 
 ## Texture Atlas Generator
 
-`Scripts/atlas_generator.py` must be run before the first build (CMake calls it automatically):
+`Scripts/atlas_generator.py` regenerates the block definitions when new block textures are added. It is **not** called automatically by CMake — `src/Textures/Block.h` and `src/Textures/Block.c` are committed.
+
+Run it manually when modifying `Assets/Block/`:
+
+```bash
+python Scripts/atlas_generator.py
+```
 
 1. Scans `Assets/Block/*.png` (each image is 16×16 pixels).
 2. Recognizes `_top`, `_bottom`, `_side` suffixes to assign per-face textures.
-3. Packs all images into a single square atlas PNG → `Textures/Pictures/atlas.png`.
-4. Emits `Textures/Block.h` (enum of all block types) and `Textures/Block.c` (`InitBlockPattern()` populating a `BlockPattern` array with atlas indices).
+3. Packs all images into a single square atlas PNG → `Assets/Pictures/atlas.png`.
+4. Emits `src/Textures/Block.h` (enum of all block types) and `src/Textures/Block.c` (`InitBlockPattern()` populating a `BlockPattern` array with atlas indices).
 
 The atlas is loaded once at runtime by `stb_image` and bound to `GL_TEXTURE0`.
 
@@ -482,7 +476,7 @@ Called before the window opens, writes three BMP files to `test/`:
 | `<name>_RGB.bmp` | Height map with block colors |
 | `Biomes_RGB.bmp` | Biome atlas lookup result |
 
-### Log file (`Utils/FileUtils.c`)
+### Log file (`src/Utils/FileUtils.c`)
 
 `OpenLogFile()` creates `print.txt` in the working directory. Helper functions:
 
