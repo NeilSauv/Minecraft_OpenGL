@@ -7,7 +7,7 @@
 #include <cglm/cglm.h>
 #include "GLFW/glfw3.h"
 
-vec3 cameraPos = { 0.0f, 0.0f, 650.0f };
+vec3 cameraPos = { 0.0f, 700.0f, 0.0f };
 
 bool groundCheck = false;
 bool jumped = false;

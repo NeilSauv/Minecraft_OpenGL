@@ -5,7 +5,7 @@
 
 #define ChunkSize 16
 #define ChunkHeight 256
-#define ChunkView 15 * 5
+#define ChunkView 15
 
 #define VERTICES_PER_CHUNK                                                     \
     (ChunkSize * ChunkSize * 6) // 6 floats par sommet (position + couleur)

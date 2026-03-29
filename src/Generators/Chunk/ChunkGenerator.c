@@ -1,4 +1,5 @@
 #include "ChunkGenerator.h"
+#include "ChunkManager.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -22,35 +23,84 @@ typedef struct
     float x, y, z, h;
 } Point3D;
 
-// Fonction qui calcule la position 3D d'un sommet sur la planète
 Point3D GetPlanetPoint(int gridX, int gridZ)
 {
     float planetRadius = 600.0f;
-    float angleScale = 0.005f;
     float maxMountainHeight = 80.0f;
+    float FACE_SIZE = 1200.0f;
 
-    float theta = gridX * angleScale;
-    float phi = gridZ * angleScale;
+    float u = (float)gridX / (FACE_SIZE / 2.0f);
+    float v = (float)gridZ / (FACE_SIZE / 2.0f);
 
-    // Direction pure depuis le centre
-    float nx = cos(phi) * cos(theta);
-    float ny = sin(phi);
-    float nz = cos(phi) * sin(theta);
+    // 1. On projette la grille 2D locale sur la face 3D correspondante du cube
+    float cx = 0, cy = 0, cz = 0;
+    if (currentFace == 0)
+    {
+        cx = u;
+        cy = 1;
+        cz = v;
+    } // TOP
+    else if (currentFace == 1)
+    {
+        cx = 1;
+        cy = v;
+        cz = -u;
+    } // RIGHT
+    else if (currentFace == 2)
+    {
+        cx = u;
+        cy = -1;
+        cz = -v;
+    } // BOTTOM
+    else if (currentFace == 3)
+    {
+        cx = -1;
+        cy = v;
+        cz = u;
+    } // LEFT
+    else if (currentFace == 4)
+    {
+        cx = u;
+        cy = v;
+        cz = 1;
+    } // FRONT
+    else if (currentFace == 5)
+    {
+        cx = -u;
+        cy = v;
+        cz = -1;
+    } // BACK
+
+    // 2. LE PLIAGE MAGIQUE : La Norme Infinie
+    // Si la grille déborde sur la face d'à côté, on la force à rester collée
+    // sur l'arête du cube !
+    float max_val = fmaxf(fabsf(cx), fmaxf(fabsf(cy), fabsf(cz)));
+    cx /= max_val;
+    cy /= max_val;
+    cz /= max_val;
+
+    // 3. Transformation du Cube Parfait vers la Sphère Parfaite
+    float x2 = cx * cx;
+    float y2 = cy * cy;
+    float z2 = cz * cz;
+
+    float nx = cx * sqrtf(1.0f - (y2 / 2.0f) - (z2 / 2.0f) + (y2 * z2 / 3.0f));
+    float ny = cy * sqrtf(1.0f - (x2 / 2.0f) - (z2 / 2.0f) + (x2 * z2 / 3.0f));
+    float nz = cz * sqrtf(1.0f - (x2 / 2.0f) - (y2 / 2.0f) + (x2 * y2 / 3.0f));
 
     BlockInfoStruct blockInfo;
     float heightF = GetSingleNoiseVal3D(nx, ny, nz, &blockInfo, heightNoise);
     float height = heightF * maxMountainHeight;
 
     if (height < 0.0f)
-        height = 0.0f; // Niveau de l'eau
+        height = 0.0f; // Surface de l'eau
 
-    Point3D p;
     float totalRadius = planetRadius + height;
+    Point3D p;
     p.x = nx * totalRadius;
     p.y = ny * totalRadius;
     p.z = nz * totalRadius;
-    p.h =
-        heightF; // On garde la hauteur pure pour calculer la couleur plus tard
+    p.h = heightF;
     return p;
 }
 

@@ -1,11 +1,12 @@
 #include "Camera.h"
 #include <math.h>
 
-// Vecteurs initiaux parfaitement alignés
-vec3 forward = { 1.0f, 0.0f, 0.0f }; // On regarde vers l'avant
-vec3 up = { 0.0f, 0.0f, 1.0f };
-vec3 right = { 0.0f, 1.0f, 0.0f };
-vec3 worldUp = { 0.0f, 0.0f, 1.0f }; // La gravité de la planète locale
+// Modifiez les 4 vecteurs tout en haut du fichier :
+vec3 forward = { 0.0f, 0.0f, -1.0f }; // On regarde vers l'avant (horizon Z)
+vec3 up = { 0.0f, 1.0f, 0.0f }; // Le haut de la tête
+vec3 right = { 1.0f, 0.0f, 0.0f }; // La droite
+vec3 worldUp = { 0.0f, 1.0f,
+                 0.0f }; // La gravité locale initiale (Le Pôle Nord)
 
 float lastX = 1920.0f / 2.0f;
 float lastY = 1080.0f / 2.0f;
