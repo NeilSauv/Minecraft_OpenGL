@@ -4,53 +4,57 @@ project(Minecraft C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+# Set all target outputs to the "bin" directory
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_SOURCE_DIR}/bin)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR}/bin)
+
 # =========================
 # SOURCES (EXPLICITES)
 # =========================
 
 set(SOURCES
-    main.c
+    src/main.c
 
     # Generators
-    Generators/Chunk/BiomeGenerator.c
-    Generators/Chunk/ChunkGenerator.c
-    Generators/Chunk/ChunkManager.c
-    Generators/Chunk/Region.c
+    src/Generators/Chunk/BiomeGenerator.c
+    src/Generators/Chunk/ChunkGenerator.c
+    src/Generators/Chunk/ChunkManager.c
+    src/Generators/Chunk/Region.c
 
-    Generators/Noises/NoiseStruct.c
-    Generators/Noises/SimplexNoise.c
+    src/Generators/Noises/NoiseStruct.c
+    src/Generators/Noises/SimplexNoise.c
 
     # Physics
-    Physics/Collisions.c
-    Physics/Ray.c
+    src/Physics/Collisions.c
+    src/Physics/Ray.c
 
     # Player
-    Player/Camera.c
-    Player/Controller.c
-    Player/Destroy.c
+    src/Player/Camera.c
+    src/Player/Controller.c
+    src/Player/Destroy.c
 
     # Shaders
-    Shaders/Shader.c
+    src/Shaders/Shader.c
 
     # Textures
-    Textures/BitmapCreator.c
-    Textures/Block.c
-    Textures/BlockDef.c
-    Textures/ColorMap.c
-    Textures/DrawNoise.c
-    Textures/TextureSet.c
+    src/Textures/BitmapCreator.c
+    src/Textures/Block.c
+    src/Textures/BlockDef.c
+    src/Textures/ColorMap.c
+    src/Textures/DrawNoise.c
+    src/Textures/TextureSet.c
 
     # Utils
-    Utils/Errors.c
-    Utils/FileUtils.c
-    Utils/List.c
-    Utils/TimeUtils.c
-
-    # STB (UNE SEULE FOIS)
-    stb_impl.c
+    src/Utils/Errors.c
+    src/Utils/FileUtils.c
+    src/Utils/List.c
+    src/Utils/TimeUtils.c
 
     # GLAD
-    glad.c
+    opengl/glad/glad.c
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -60,7 +64,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # =========================
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/opengl
 )
 
@@ -115,10 +119,18 @@ endif()
 # ASSETS
 # =========================
 
-foreach(ASSET_DIR Textures Shaders Assets)
+foreach(ASSET_DIR Assets)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${CMAKE_SOURCE_DIR}/${ASSET_DIR}"
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${ASSET_DIR}"
+    )
+endforeach()
+
+foreach(SHADER BasicVertices.vert BasicColor.frag)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_SOURCE_DIR}/src/Shaders/${SHADER}"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>/Assets/Shaders/${SHADER}"
     )
 endforeach()
