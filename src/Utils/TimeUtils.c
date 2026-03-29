@@ -11,5 +11,9 @@ void UpdateDeltaTime()
 {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
+
+    if (deltaTime > 0.1f)
+        deltaTime = 0.1f;
+
     lastFrame = currentFrame;
 }

@@ -47,28 +47,29 @@ void DrawChunk()
     Draw(count);
 }
 
+int baseGridX = 0;
+int baseGridZ = 0;
+
 void Update()
 {
     float radius = glm_vec3_norm(cameraPos);
     if (radius < 1.0f)
         radius = 1.0f;
 
-    // 1. DÉTECTION DE LA FACE : Quelle face du cube est la plus proche de la
-    // caméra ?
+    // 1. DÉTECTION DE LA FACE
     int newFace = 0;
     float ax = fabsf(cameraPos[0]);
     float ay = fabsf(cameraPos[1]);
     float az = fabsf(cameraPos[2]);
 
     if (ay >= ax && ay >= az)
-        newFace = cameraPos[1] > 0 ? 0 : 2; // TOP / BOTTOM
+        newFace = cameraPos[1] > 0 ? 0 : 2;
     else if (ax >= ay && ax >= az)
-        newFace = cameraPos[0] > 0 ? 1 : 3; // RIGHT / LEFT
+        newFace = cameraPos[0] > 0 ? 1 : 3;
     else
-        newFace = cameraPos[2] > 0 ? 4 : 5; // FRONT / BACK
+        newFace = cameraPos[2] > 0 ? 4 : 5;
 
-    // 2. CONVERSION : On aplatit la sphère pour retrouver notre système
-    // "Minecraft" 2D classique
+    // 2. CONVERSION EN GRILLE LOCALE
     float u = 0.0f, v = 0.0f;
     if (newFace == 0)
     {
@@ -105,49 +106,51 @@ void Update()
     float virtualCamX = u * (FACE_SIZE / 2.0f);
     float virtualCamZ = v * (FACE_SIZE / 2.0f);
 
-    int targetOffsetX = (int)roundf(virtualCamX / ChunkSize);
-    int targetOffsetZ = (int)roundf(virtualCamZ / ChunkSize);
-
-    // 3. TRANSITION DE FACE : Si vous passez la frontière, on recentre
-    // immédiatement la grille entière
+    // 3. TRANSITION DE FACE PARFAITE
     if (newFace != currentFace)
     {
         currentFace = newFace;
-        offsetX = targetOffsetX;
-        offsetZ = targetOffsetZ;
-        GenerateChunks(); // On réécrit massivement la carte graphique pour la
-                          // nouvelle face !
-        return; // On skip la mise à jour fine pour cette frame
+        baseGridX = (int)roundf(virtualCamX / ChunkSize);
+        baseGridZ = (int)roundf(virtualCamZ / ChunkSize);
+        offsetX = 0; // On remet le Ring Buffer à zéro !
+        offsetZ = 0;
+
+        ClearChunk(); // On supprime l'ancienne carte graphique
+        count = 0; // On reset le compteur
+        GenerateChunks(); // On génère la nouvelle face proprement
+        return;
     }
 
-    // 4. MISE À JOUR FINE : Chargement classique des chunks quand vous marchez
-    // sur une même face
-    bool xUpdate = false;
-    bool zUpdate = false;
-    int addAxisX = 0;
-    int addAxisZ = 0;
+    // 4. MISE À JOUR FINE (RELATIF AU NOUVEAU CENTRE)
+    bool xUpdate = false, zUpdate = false;
+    int addAxisX = 0, addAxisZ = 0;
     int ChunkLength = ChunkView * 2;
 
-    if (virtualCamX > (offsetX + 1) * ChunkSize)
+    // On soustrait le point de repère pour que le Ring Buffer travaille avec de
+    // petits nombres
+    float relativeCamX = virtualCamX - (baseGridX * ChunkSize);
+    float relativeCamZ = virtualCamZ - (baseGridZ * ChunkSize);
+
+    if (relativeCamX > (offsetX + 1) * ChunkSize)
     {
         offsetX++;
         addAxisX = -1;
         xUpdate = true;
     }
-    else if (virtualCamX < (offsetX - 1) * ChunkSize)
+    else if (relativeCamX < (offsetX - 1) * ChunkSize)
     {
         offsetX--;
         addAxisX = 0;
         xUpdate = true;
     }
 
-    if (virtualCamZ < (offsetZ - 1) * ChunkSize)
+    if (relativeCamZ < (offsetZ - 1) * ChunkSize)
     {
         offsetZ--;
         zUpdate = true;
         addAxisZ = 0;
     }
-    else if (virtualCamZ > (offsetZ + 1) * ChunkSize)
+    else if (relativeCamZ > (offsetZ + 1) * ChunkSize)
     {
         offsetZ++;
         zUpdate = true;

@@ -131,8 +131,8 @@ void CreateChunk(int xAxis, int yAxis, int zAxis, int i, bool destroyBlock)
     {
         for (int x = 0; x < ChunkSize; x++)
         {
-            int wX = xAxis + x;
-            int wZ = zAxis + z;
+            int wX = xAxis + (baseGridX * ChunkSize) + x;
+            int wZ = zAxis + (baseGridZ * ChunkSize) + z;
 
             // On calcule les 4 coins de notre case
             Point3D p00 = GetPlanetPoint(wX, wZ);
